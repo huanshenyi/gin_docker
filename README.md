@@ -1,6 +1,11 @@
 コンテナ起動
 
 ```
-docker-compose
+docker-compose up -d
+```
+
+air うまく起動しないので、いったんこれで
+```
+docker-compose restart 
 ```
 
