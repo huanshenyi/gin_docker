@@ -10,13 +10,13 @@ func main() {
 	router := gin.Default()
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "hello world11d111",
+			"message": "hello world",
 		})
 	})
 	router.GET("/hi", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "hi",
+			"message": "h",
 		})
 	})
-	router.Run(":8080")
+	router.Run(":3001")
 }

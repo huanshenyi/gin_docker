@@ -12,16 +12,6 @@ ADD . /go/src/work
 
 RUN go mod download
 
-RUN go get -u github.com/cosmtrek/air
+RUN go get github.com/codegangsta/gin
 
-RUN air -v
-
-EXPOSE 8080
-
-# もう一つのやり方
-# cosmtrek/airのインストール
-# RUN go get -u github.com/cosmtrek/air
-# delveのインストール
-# RUN go get -u github.com/go-delve/delve/cmd/dlv
-
-CMD ["go", "run", "/go/src/work/main.go"]
+EXPOSE 3000 3001

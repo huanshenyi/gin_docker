@@ -8,5 +8,9 @@ services:
     volumes:
       - .:/go/src/work # マウントディレクトリ指定    
     ports: 
-      - "8080:8080"
+      - "3000:3000"
+      - "3001:3001"
+    command: gin run main.go
+
+
       
