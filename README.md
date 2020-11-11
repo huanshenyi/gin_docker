@@ -3,9 +3,3 @@
 ```
 docker-compose up -d
 ```
-
-air うまく起動しないので、いったんこれで
-```
-docker-compose restart 
-```
-
