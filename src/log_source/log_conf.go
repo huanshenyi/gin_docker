@@ -10,12 +10,16 @@ var Log = logrus.New()
 func init() {
 	log_conf := LoadLogConfig()
 
-	// log output
-	file, err := os.OpenFile(log_conf.LogDir, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if err != nil {
-		panic(err)
+	// log output真偽値でコントロール
+	if !log_conf.LogOutPutToFile{
+		Log.Out = os.Stdout
+	}else{
+		file, err := os.OpenFile(log_conf.LogDir, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+		if err != nil {
+			panic(err)
+		}
+		Log.Out = file
 	}
-	Log.Out = file
 	// log leve
 	level_mapping := map[string]logrus.Level{
 		"trace": logrus.TraceLevel,
@@ -30,5 +34,8 @@ func init() {
 
 	// log のフォーマット
 	Log.SetFormatter(&logrus.JSONFormatter{})
+
+	// log 呼ばれた関数と行をlogに追加
+	Log.SetReportCaller(true)
 
 }

@@ -9,6 +9,7 @@ import (
 type LogConfig struct {
 	LogDir string `json:"log_dir"`
 	LogLevel string `json:"log_level"`
+	LogOutPutToFile bool `json:"log_out_put_to_file"`
 }
 
 func LoadLogConfig() *LogConfig {

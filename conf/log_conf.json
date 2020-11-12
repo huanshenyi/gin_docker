@@ -1,4 +1,5 @@
 {
   "log_dir": "logs/gin_project.log",
-  "log_level": "debug"
+  "log_level": "debug",
+  "log_out_put_to_file": false
 }
