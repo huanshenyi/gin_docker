@@ -1,4 +1,4 @@
-version: '3' # composeファイルのバーション指定
+version: '3'
 
 networks:
   backend:
@@ -8,10 +8,10 @@ services:
   app: # service名
     build: 
       context: .
-      dockerfile: ./docker/go/Dockerfile # ビルドに使用するDockerfileがあるディレクトリ指定
+      dockerfile: ./docker/go/Dockerfile
     tty: true # コンテナの起動永続化
     volumes:
-      - .:/go/src/work # マウントディレクトリ指定    
+      - .:/go/src/work
     ports: 
       - "3000:3000"
       - "3001:3001"
@@ -21,7 +21,6 @@ services:
     depends_on:
       - mysql
 
-  
   mysql:
     container_name: mysql
     build: 
@@ -40,6 +39,34 @@ services:
       - seccomp:unconfined
     networks:
       - backend
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    volumes:
+      - ./docker/es/es-data:/usr/share/elasticsearch/dat
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    environment:
+      - I18N_LOCALE="ja-JP"
+    ports:
+      - 5601:5601
+    volumes:
+      - ./docker/ja-JP.json:/usr/share/kibana/node_modules/x-pack/plugins/translations/translations/ja-JP.json
+
+
+
 
 
       
