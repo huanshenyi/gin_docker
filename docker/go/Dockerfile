@@ -10,8 +10,8 @@ COPY go.sum /go/src/work
 
 ADD . /go/src/work
 
-RUN go mod download
+RUN go mod tidy
 
-RUN go get github.com/codegangsta/gin
+RUN go install github.com/codegangsta/gin@latest
 
 EXPOSE 3000 3001
