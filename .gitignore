@@ -1,5 +1,5 @@
 .idea
 .DS_Store
-docker/mysql/data
+docker/mysql/data/
 
 logs/
