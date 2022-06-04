@@ -1,6 +1,8 @@
 package main
 
 import (
+	"gin_test/src/api/routes"
+	"gin_test/src/di"
 	"gin_test/src/log_source"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -10,8 +12,8 @@ import (
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
+	engine := gin.Default()
+	engine.GET("/", func(c *gin.Context) {
 		log_source.Log.Info("infoのレベル-")
 		log_source.Log.Debug("debugのレベル-")
 		// Fieldの設定は各パッケージに使ったほうがいい、init()内ではreturnがないため、意味ない
@@ -24,10 +26,13 @@ func main() {
 			"message": "hello world",
 		})
 	})
-	router.GET("/hi", func(c *gin.Context) {
+	engine.GET("/hi", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "h",
+			"message": "h1",
 		})
 	})
-	router.Run(":3001")
+	s := di.NewGssktService()
+	routes.CreateRoutes(engine, s)
+
+	engine.Run(":3001")
 }
