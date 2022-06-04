@@ -28,7 +28,7 @@ func main() {
 	})
 	engine.GET("/hi", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "h1",
+			"message": "11h",
 		})
 	})
 	s := di.NewGssktService()

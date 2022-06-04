@@ -16,8 +16,8 @@ services:
       - "3000:3000"
       - "3001:3001"
     networks: 
-      - backend  
-    command: go run main.go
+      - backend
+    command: gin main.go
     depends_on:
       - mysql
 

@@ -7,6 +7,7 @@ RUN mkdir /go/src/work
 WORKDIR /go/src/work
 COPY go.mod /go/src/work
 COPY go.sum /go/src/work
+COPY gin-bin /go/src/work
 
 ADD . /go/src/work
 
