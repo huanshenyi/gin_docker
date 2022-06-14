@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	router := gin.Default()
+	router := gin.Default( )
 	router.GET("/", func(c *gin.Context) {
 		log_source.Log.Info("infoのレベル-")
 		log_source.Log.Debug("debugのレベル-")
@@ -29,5 +29,5 @@ func main() {
 			"message": "h",
 		})
 	})
-	router.Run(":3001")
+	_ = router.Run(":3001")
 }
