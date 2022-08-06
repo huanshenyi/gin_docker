@@ -1,9 +1,10 @@
 package routes
 
 import (
-	"gin_test/src/di"
-	"github.com/gin-gonic/gin"
+	"gin_docker/src/di"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func CreatePrivateRoutes(engine *gin.RouterGroup, s *di.GssktService) {
