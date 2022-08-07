@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 networks:
   backend:
@@ -6,16 +6,16 @@ networks:
 
 services:
   app: # service名
-    build: 
+    build:
       context: .
       dockerfile: ./docker/go/Dockerfile
     tty: true # コンテナの起動永続化
     volumes:
       - .:/go/src/work
-    ports: 
+    ports:
       - "3000:3000"
       - "3001:3001"
-    networks: 
+    networks:
       - backend
     command: gin main.go
     depends_on:
@@ -23,7 +23,7 @@ services:
 
   mysql:
     container_name: mysql
-    build: 
+    build:
       context: .
       dockerfile: ./docker/mysql/Dockerfile
     environment:
@@ -31,9 +31,9 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ginproject
     hostname: mysql
-    ports: 
+    ports:
       - "3306:3306"
-    volumes: 
+    volumes:
       - ./docker/mysql/data:/var/lib/mysql
     security_opt:
       - seccomp:unconfined
@@ -64,9 +64,3 @@ services:
       - 5601:5601
     volumes:
       - ./docker/ja-JP.json:/usr/share/kibana/node_modules/x-pack/plugins/translations/translations/ja-JP.json
-
-
-
-
-
-      
