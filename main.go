@@ -3,6 +3,9 @@ package main
 import (
 	"gin_docker/src/api/routes"
 	"gin_docker/src/di"
+	"gin_docker/src/domain"
+	"gin_docker/src/infra/db"
+	"gin_docker/src/infra/repository"
 	"gin_docker/src/log_source"
 	"net/http"
 
@@ -14,6 +17,9 @@ import (
 )
 
 func main() {
+
+	tx := repository.NewTxEmpty()
+
 	engine := gin.Default()
 	engine.GET("/", func(c *gin.Context) {
 		log_source.Log.Info("infoのレベル-")
@@ -30,11 +36,16 @@ func main() {
 	})
 	engine.GET("/hi", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "12h",
+			"message": "122h",
 		})
 	})
 	s := di.NewGssktService()
+	initializeApp(tx)
 	routes.CreateRoutes(engine, s)
 
 	engine.Run(":3001")
+}
+
+func initializeApp(conn domain.Tx) {
+	db.MigrateOnlyLocal(conn)
 }
