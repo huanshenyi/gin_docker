@@ -36,11 +36,11 @@ func main() {
 	})
 	engine.GET("/hi", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "122h",
+			"message": "121h",
 		})
 	})
-	s := di.NewGssktService()
 	initializeApp(tx)
+	s := di.NewGssktService(tx)
 	routes.CreateRoutes(engine, s)
 
 	engine.Run(":3001")

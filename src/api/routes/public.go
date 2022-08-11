@@ -13,4 +13,10 @@ func CreatePublicRoutes(engine *gin.RouterGroup, s *di.GssktService) {
 			"message": "tag",
 		})
 	})
+
+	user := engine.Group("/user")
+	{
+		user.POST("/regist", s.User.Regist)
+		user.POST("/login", s.User.Login)
+	}
 }
