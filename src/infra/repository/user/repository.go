@@ -6,6 +6,8 @@ import (
 	"gin_docker/src/domain/user"
 	"gin_docker/src/infra/model"
 	"math/rand"
+
+	"gorm.io/gorm"
 )
 
 type Repository struct {
@@ -37,7 +39,31 @@ func (r Repository) Login(tx domain.Tx, input user.LoginInput) (user.UserData, e
 		return user.UserData{}, err
 	}
 	return user.UserData{
+		ID:       userData.ID,
 		UserName: userData.UserName,
 		Icon:     userData.Icon,
 	}, nil
+}
+
+func (r Repository) AddUserToken(tx domain.Tx, token string, userID int) error {
+	var accessToken model.AccessToken
+	result := tx.DB().Table(new(model.AccessToken).TableName()).Where("user_id = ?", userID).First(&accessToken)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			result := tx.DB().Table(new(model.AccessToken).TableName()).Create(&model.AccessToken{
+				UserID:      userID,
+				AccessToken: token,
+			})
+			if result.Error != nil {
+				return result.Error
+			}
+		}
+	} else {
+		accessToken.AccessToken = token
+		result := tx.DB().Table(new(model.AccessToken).TableName()).Where("user_id = ?", userID).Update("access_token", token)
+		if result.Error != nil {
+			return result.Error
+		}
+	}
+	return nil
 }

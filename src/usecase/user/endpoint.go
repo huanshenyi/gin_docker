@@ -46,5 +46,9 @@ func (i *interactor) Login(input LoginInput) (UserToken, error) {
 	if err != nil {
 		return UserToken{}, err
 	}
+	err = i.repository.AddUserToken(i.tx, token, user.ID)
+	if err != nil {
+		return UserToken{}, err
+	}
 	return UserToken{Token: token}, nil
 }

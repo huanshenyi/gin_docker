@@ -5,6 +5,7 @@ import "gin_docker/src/domain"
 type Repository interface {
 	Regist(tx domain.Tx, input RegistInput) error
 	Login(tx domain.Tx, input LoginInput) (UserData, error)
+	AddUserToken(tx domain.Tx, token string, userID int) error
 }
 
 type RegistInput struct {
@@ -19,6 +20,15 @@ type LoginInput struct {
 }
 
 type UserData struct {
+	ID       int
 	UserName string
 	Icon     string
+}
+
+func (u UserData) IsLoginedUser() bool {
+	return u.ID != 0
+}
+
+func (u UserData) IsAnonymousUser() bool {
+	return u.ID == 0
 }

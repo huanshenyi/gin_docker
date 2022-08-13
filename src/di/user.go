@@ -7,7 +7,7 @@ import (
 	usecase "gin_docker/src/usecase/user"
 )
 
-func newUser(tx domain.Tx) controller.User {
+func newUserController(tx domain.Tx) controller.User {
 	i := usecase.NewInteractor(
 		user.NewRepository(),
 		tx,
