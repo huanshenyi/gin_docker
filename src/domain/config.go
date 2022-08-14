@@ -1,6 +1,8 @@
 package domain
 
-// JWTtoken関連
 const (
+	// JWTtoken関連
 	ClientAccessUserTokenHTTPHeaderKey = "X-Token"
+	// デバイスタイプ
+	ClientAppTypeHTTPHeaderKey = "X-ClientType"
 )

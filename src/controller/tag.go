@@ -16,6 +16,7 @@ func (t *Tag) List(c *gin.Context) {
 	user, _ := authenticator.GetUser(c)
 	fmt.Println(user)
 	fmt.Println(user.IsAnonymousUser())
+	fmt.Println(c.Get("device"))
 
 	c.JSON(http.StatusOK, nil)
 }

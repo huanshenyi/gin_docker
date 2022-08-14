@@ -19,6 +19,8 @@ func NewGinMiddlewares(srv *GssktService) *GinMiddlewares {
 		Chain: []gin.HandlerFunc{
 			gin.Recovery(),
 			middleware.NewAuth(auth),
+			middleware.NewCors(),
+			middleware.NewDevice(),
 		},
 	}
 }

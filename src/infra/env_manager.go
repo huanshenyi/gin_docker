@@ -1,6 +1,9 @@
 package infra
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 var EnvMan envManager
 
@@ -13,6 +16,8 @@ type envManager struct {
 	DBPort     string `validate:"required"`
 	DBName     string `validate:"required"`
 	HOST       string `validate:"required"`
+
+	CORSAllowOrigins []string `validate:"required"`
 }
 
 func init() {
@@ -22,13 +27,14 @@ func init() {
 func newEnvManager() envManager {
 	var em envManager
 	em = envManager{
-		AppEnv:     os.Getenv("APP_ENV"),
-		DBUser:     os.Getenv("UB_USER"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
-		DBHost:     os.Getenv("DB_HOST"),
-		DBPort:     os.Getenv("DB_PORT"),
-		DBName:     os.Getenv("DB_NAME"),
-		HOST:       os.Getenv("HOST"),
+		AppEnv:           os.Getenv("APP_ENV"),
+		DBUser:           os.Getenv("UB_USER"),
+		DBPassword:       os.Getenv("DB_PASSWORD"),
+		DBHost:           os.Getenv("DB_HOST"),
+		DBPort:           os.Getenv("DB_PORT"),
+		DBName:           os.Getenv("DB_NAME"),
+		HOST:             os.Getenv("HOST"),
+		CORSAllowOrigins: strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"), ","),
 	}
 	return em
 }
