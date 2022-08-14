@@ -30,11 +30,7 @@ func (r Repository) List(tx domain.Tx, limit int, status int) ([]tag.TagData, er
 	}
 	tgList := make([]tag.TagData, len(tags))
 	for i, v := range tags {
-		tgList[i] = tag.TagData{
-			ID:     v.ID,
-			Name:   v.Name,
-			Status: v.Status,
-		}
+		tgList[i] = v.ToDomain()
 	}
 	return tgList, nil
 }

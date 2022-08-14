@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"gin_docker/src/domain/tag"
+	"time"
+)
 
 type Tag struct {
 	ID        int       `gorm:"column:id"`
@@ -12,4 +15,12 @@ type Tag struct {
 
 func (m *Tag) TableName() string {
 	return "tags"
+}
+
+func (m *Tag) ToDomain() tag.TagData {
+	return tag.TagData{
+		ID:     m.ID,
+		Name:   m.Name,
+		Status: m.Status,
+	}
 }
