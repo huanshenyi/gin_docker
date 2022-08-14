@@ -19,8 +19,16 @@ import (
 func main() {
 
 	tx := repository.NewTxEmpty()
+	s := di.NewGssktService(tx)
+	engine := gin.New()
 
-	engine := gin.Default()
+	// ミドルウェア追加
+	mv := di.NewGinMiddlewares(s)
+	for _, v := range mv.Chain {
+		engine.Use(v)
+	}
+
+	// テストルート
 	engine.GET("/", func(c *gin.Context) {
 		log_source.Log.Info("infoのレベル-")
 		log_source.Log.Debug("debugのレベル-")
@@ -40,7 +48,6 @@ func main() {
 		})
 	})
 	initializeApp(tx)
-	s := di.NewGssktService(tx)
 	routes.CreateRoutes(engine, s)
 
 	engine.Run(":3001")
