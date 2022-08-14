@@ -4,3 +4,4 @@ docker/mysql/data/*
 !docker/mysql/data/.gitkeep
 
 logs/
+gin-bin
