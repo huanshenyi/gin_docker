@@ -2,5 +2,7 @@
 .DS_Store
 docker/mysql/data/*
 !docker/mysql/data/.gitkeep
+docker/mysql/data/
+
 
 logs/
