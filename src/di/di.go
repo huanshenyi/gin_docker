@@ -22,6 +22,7 @@ func NewGssktService(tx domain.Tx) *GssktService {
 	db := tx.DB()
 	return &GssktService{
 		User: newUserController(tx),
+		Tag:  newTagController(tx),
 		UserService: dblayer.NewUserService(
 			db,
 			[]int{1, 2, 3},

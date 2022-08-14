@@ -1,10 +1,10 @@
 package di
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"gin_docker/src/domain/authenticator"
 	"gin_docker/src/middleware"
-
-	"github.com/gin-gonic/gin"
 )
 
 type GinMiddlewares struct {
