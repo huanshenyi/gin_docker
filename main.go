@@ -1,19 +1,19 @@
 package main
 
 import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
+
 	"gin_docker/src/api/routes"
 	"gin_docker/src/di"
 	"gin_docker/src/domain"
 	"gin_docker/src/infra/db"
 	"gin_docker/src/infra/repository"
 	"gin_docker/src/log_source"
-	"net/http"
-
-	"github.com/sirupsen/logrus"
 
 	_ "gin_docker/src/log_source"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
