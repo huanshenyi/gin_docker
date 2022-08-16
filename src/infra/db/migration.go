@@ -15,7 +15,7 @@ func MigrateOnlyLocal(tx domain.Tx) {
 	}
 	log_source.Log.Info("start migration...")
 
-	hasTable := db.Migrator().HasTable("accesstokens")
+	hasTable := db.Migrator().HasTable("users")
 	if hasTable {
 		return
 	}
@@ -25,6 +25,7 @@ func MigrateOnlyLocal(tx domain.Tx) {
 		&model.UserAuth{},
 		&model.Tag{},
 		&model.AccessToken{},
+		&model.Recruitment{},
 	}
 	if err := db.Migrator().CreateTable(tables...); err != nil {
 		log_source.Log.Error(err.Error())

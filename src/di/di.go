@@ -10,6 +10,7 @@ import (
 type GssktService struct {
 	User          controller.User
 	Tag           controller.Tag
+	Recruitment   controller.Recruitment
 	UserService   *dblayer.UserService
 	ClientService ClientService
 }
@@ -21,8 +22,9 @@ type ClientService struct {
 func NewGssktService(tx domain.Tx) *GssktService {
 	db := tx.DB()
 	return &GssktService{
-		User: newUserController(tx),
-		Tag:  newTagController(tx),
+		User:        newUserController(tx),
+		Tag:         newTagController(tx),
+		Recruitment: newRecruitmentController(tx),
 		UserService: dblayer.NewUserService(
 			db,
 			[]int{1, 2, 3},
