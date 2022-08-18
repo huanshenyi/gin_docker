@@ -2,21 +2,27 @@ package log_source
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 )
 
 type LogConfig struct {
-	LogDir string `json:"log_dir"`
-	LogLevel string `json:"log_level"`
-	LogOutPutToFile bool `json:"log_out_put_to_file"`
+	LogDir          string `json:"log_dir"`
+	LogLevel        string `json:"log_level"`
+	LogOutPutToFile bool   `json:"log_out_put_to_file"`
 }
 
 func LoadLogConfig() *LogConfig {
+	str, _ := os.Getwd()
+	fmt.Println(str)
 	log_conf := LogConfig{}
 	file, err := os.Open("conf/log_conf.json")
-	if err != nil{
-		panic(err)
+	if err != nil {
+		file, err = os.Open("../../conf/log_conf.json")
+		if err != nil {
+			panic(err)
+		}
 	}
 	defer file.Close()
 
