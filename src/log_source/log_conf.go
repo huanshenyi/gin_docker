@@ -1,8 +1,9 @@
 package log_source
 
 import (
-	"github.com/sirupsen/logrus"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 var Log = logrus.New()
@@ -11,9 +12,9 @@ func init() {
 	log_conf := LoadLogConfig()
 
 	// log output真偽値でコントロール
-	if !log_conf.LogOutPutToFile{
+	if !log_conf.LogOutPutToFile {
 		Log.Out = os.Stdout
-	}else{
+	} else {
 		file, err := os.OpenFile(log_conf.LogDir, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 		if err != nil {
 			panic(err)
