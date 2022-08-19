@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"gin_docker/src/di"
-
 	"github.com/gin-gonic/gin"
+
+	"gin_docker/src/di"
 )
 
 func CreatePrivateRoutes(engine *gin.RouterGroup, s *di.GssktService) {
@@ -14,6 +14,7 @@ func CreatePrivateRoutes(engine *gin.RouterGroup, s *di.GssktService) {
 			recruitment := me.Group("/recruitments")
 			{
 				recruitment.GET("", s.Recruitment.List)
+				recruitment.POST("", s.Recruitment.Create)
 			}
 		}
 	}

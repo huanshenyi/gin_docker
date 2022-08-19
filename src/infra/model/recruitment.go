@@ -41,3 +41,14 @@ func (m *Recruitment) ToDomain() domain.Recruitment {
 		UserID:      m.UserID,
 	}
 }
+
+func RecruitmentTypeToSQL(value domain.RecruitmentType) string {
+	switch value {
+	case domain.RecruitmentTypeDefault:
+		return "recruitment"
+	case domain.RecruitmentTypeFreeTime:
+		return "freeTime"
+	default:
+		return "recruitment"
+	}
+}
