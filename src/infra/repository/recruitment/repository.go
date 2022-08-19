@@ -27,3 +27,22 @@ func (r Repository) ListRecruitmentForUserID(tx domain.Tx, userID int) (recruitm
 		Recruitments: rs,
 	}, nil
 }
+
+func (r Repository) CreateRecruitment(tx domain.Tx, input domain.Recruitment) error {
+	db := tx.DB()
+	if err := db.Create(&model.Recruitment{
+		Title:       input.Title,
+		Place:       input.Place,
+		Start:       input.Start,
+		End:         input.End,
+		Content:     input.Content,
+		Paid:        input.Paid,
+		Reward:      input.Reward,
+		MemberLimit: input.MemberLimit,
+		Type:        model.RecruitmentTypeToSQL(input.Type),
+		UserID:      input.UserID,
+	}).Error; err != nil {
+		return err
+	}
+	return nil
+}

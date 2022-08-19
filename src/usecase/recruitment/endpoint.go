@@ -8,6 +8,7 @@ import (
 
 type Interactor interface {
 	List(input ListInput) (ListOutput, error)
+	Create(input CreateInput) error
 }
 
 func NewInteractor(repository recruitment.Repository, tx domain.Tx) Interactor {
