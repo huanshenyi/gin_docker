@@ -6,6 +6,7 @@ import (
 	"gin_docker/src/domain"
 )
 
+// CreateInput 募集追加に必要な要素
 type CreateInput struct {
 	UserID      int
 	Title       string                 `json:"title" validate:"required"`
