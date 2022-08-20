@@ -1,0 +1,2 @@
+/hoge:
+  $ref: "./food.yml"

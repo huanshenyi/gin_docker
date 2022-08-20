@@ -3,6 +3,7 @@
 docker/mysql/data/*
 !docker/mysql/data/.gitkeep
 docker/mysql/data/
+docker/swagger-watch/node_modules
 
 
 logs/

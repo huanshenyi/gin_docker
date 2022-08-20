@@ -1,0 +1,33 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: APIドキュメントe
+  license:
+    name: APIドキュメント
+host: 127.0.0.1:3000
+servers:
+  - url: https://127.0.0.1:3000
+paths:
+  /hoge:
+    get:
+      summary: food取得用test
+      operationId: showFood
+      tags:
+        - food
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          schema:
+            type: object
+            required:
+              - id1
+              - title
+              - body
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1
+              name:
+                type: string
+                example: food name

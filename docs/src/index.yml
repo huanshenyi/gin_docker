@@ -1,0 +1,11 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: APIドキュメントe
+  license:
+    name: APIドキュメント
+host: "127.0.0.1:3000"
+servers:
+  - url: https://127.0.0.1:3000
+paths:
+  $ref: "./paths/index.yml"
