@@ -1,2 +1,8 @@
-/hoge:
-  $ref: "./food.yml"
+/public/tags:
+  $ref: "./tags.yml"
+/public/user/login:
+  $ref: "./user/login.yml"
+/public/user/regist:
+  $ref: "./user/regist.yml"
+/private/user/me/recruitment:
+  $ref: "./user/me/recruitment.yml"

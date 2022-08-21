@@ -1,0 +1,112 @@
+get:
+  tags:
+    - "ユーザーの募集情報"
+  summary:
+    - "ユーザーの募集情報を取得"
+  description: "全てタイプのユーザーの募集情報を取得"
+  parameters:
+    - name: "X-Token"
+      in: "header"
+      description: "ユーザーのJWTToken User xxxxxx"
+      required: true
+      type: string
+  responses:
+    200:
+      description: "成功時のレスポンス"
+      schema:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+              example: 1
+            title:
+              type: "string"
+              example: "募集タイトル"
+            place:
+              type: "string"
+              example: "東京太田区xxx1-1-1"
+            start:
+              type: "string"
+              example: "2022-09-15T08:59:56.383+09:00"
+            end:
+              type: "string"
+              example: "2022-09-15T09:59:56.383+09:00"
+            content:
+              type: "string"
+              example: "募集内容"
+            paid:
+              type: "boolean"
+              example: true
+            reward:
+              type: "string"
+              example: "コーラー一本"
+            memberLimit:
+              type: "integer"
+              example: 2
+            type:
+              type: "string"
+              example: recruitment
+
+post:
+  tags:
+    - "ユーザーの募集情報"
+  summary:
+    - "ユーザーの募集情報追加"
+  description: "ユーザーの募集情報追加"
+  parameters:
+    - name: "title"
+      in: "formData"
+      description: "募集タイトル"
+      required: true
+      type: string
+    - name: "place"
+      in: "formData"
+      description: "場所"
+      required: true
+      type: string
+    - name: "start"
+      in: "formData"
+      description: "開始時間"
+      required: true
+      type: string
+    - name: "end"
+      in: "formData"
+      description: "終了時間"
+      required: true
+      type: string
+    - name: "content"
+      in: "formData"
+      description: "募集内容"
+      required: true
+      type: string
+    - name: "paid"
+      in: "formData"
+      description: "報酬あるかどうか"
+      required: true
+      type: boolean
+    - name: "reward"
+      in: "formData"
+      description: "報酬内容"
+      required: false
+      type: "string"
+    - name: "memberLimit"
+      in: "formData"
+      description: "応募人数上限"
+      required: true
+      type: "integer"
+    - name: "type"
+      in: "formData"
+      description: "応募タイプ"
+      required: true
+      type: "string"
+  responses:
+    204:
+      description: "成功時レスポンスなし"
+    403:
+      $ref: "#/definitions/403"
+
+definitions:
+  403:
+    description: "tokenError"

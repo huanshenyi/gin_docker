@@ -51,7 +51,7 @@ func (t *Recruitment) Create(c *gin.Context) {
 		ErrorResponse(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusNoContent, nil)
 }
 
 func (t *Recruitment) validateCreateInput(c *gin.Context) (input recruitment.CreateInput, err error) {
