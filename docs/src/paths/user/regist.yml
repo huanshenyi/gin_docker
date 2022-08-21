@@ -1,0 +1,22 @@
+post:
+  tags:
+    - "新規ユーザーAPI"
+  summary:
+    - "新規ユーザーAPI"
+  description: "テスト開発時に使用する、リリース後この形式の新規ユーザー廃棄する予定"
+  parameters:
+    - name: "identfier"
+      in: "formData"
+      description: "username"
+      required: true
+      type: string
+    - name: "passWord"
+      in: "formData"
+      description: "password"
+      required: true
+      format: password
+  responses:
+    204:
+      description: "成功時の場合、context存在しない"
+      schema:
+        type: "object"

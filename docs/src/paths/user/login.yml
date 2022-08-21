@@ -1,0 +1,31 @@
+post:
+  tags:
+    - "ユーザーログインAPI"
+  summary:
+    - "ユーザーログイン"
+  description: "ユーザーログインAPI、複数ログイン形式対応"
+  parameters:
+    - name: "identfier"
+      in: "formData"
+      description: "username | email | githubID 各タイプの対応値"
+      required: true
+      type: string
+    - name: "identityType"
+      in: "formData"
+      description: "ログインのタイプ github、SMScode、default、defaultはusername+password"
+      required: true
+      type: string
+    - name: "passWord"
+      in: "formData"
+      description: "descriptionがdefaultの場合のみ必要"
+      required: false
+      format: password
+  responses:
+    200:
+      description: "成功時のレスポンス"
+      schema:
+        type: "object"
+        properties:
+          token:
+            type: "string"
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJkZWZhdWx0TmFtZTc5NDMiLCJpY29uIjoiaHR0cHM6Ly9hdmF0YXJzLmdpdGh1YnVzZXJjb250ZW50LmNvbS91LzM1ODA2MDc_cz00MFx1MDAyNnY9NCIsImV4cCI6MTY2MDYwNzk5NiwibmJmIjoxNjYwNTIxNTk2LCJpYXQiOjE2NjA1MjE1OTZ9.aHYhfz1wT5WEO1HnIidfKx9V2uwHIn5CcodGsKmYpKI"

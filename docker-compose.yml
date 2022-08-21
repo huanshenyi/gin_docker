@@ -65,3 +65,20 @@ services:
       - 5601:5601
     volumes:
       - ./docker/ja-JP.json:/usr/share/kibana/node_modules/x-pack/plugins/translations/translations/ja-JP.json
+
+  api-doc:
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8088:8080
+    volumes:
+      - ./docker/docs:/usr/share/nginx/html
+
+  swagger-watch:
+    build: ./docker/swagger-watch
+    volumes:
+      - ./docker/swagger-watch:/app
+      - /app/node_modules
+      - ./docs/src:/src
+      - ./docker/docs/swagger.yml:/docs/swagger.yml
+    working_dir: /app
+    command: "node index.js"

@@ -1,0 +1,31 @@
+get:
+  tags:
+    - "タグ情報一覧取得API"
+  summary:
+    - "タグ情報一覧取得する"
+  description: "タグ情報一覧取得する"
+  parameters:
+    - name: "limit"
+      in: "query"
+      description: "取得数"
+      required: false
+      type: "integer"
+    - name: "status"
+      in: "query"
+      description: "取得するタグの状態"
+      required: false
+      type: string
+  responses:
+    200:
+      description: "成功時のレスポンス"
+      schema:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+              format: "int64"
+            name:
+              type: "string"
+              example: "doggie"

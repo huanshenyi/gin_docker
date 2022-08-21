@@ -1,0 +1,221 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: 時間換金APIドキュメント
+  license:
+    name: APIドキュメント
+host: 127.0.0.1:3000
+servers:
+  - url: https://127.0.0.1:3000
+paths:
+  /public/tags:
+    get:
+      tags:
+        - タグ情報一覧取得API
+      summary:
+        - タグ情報一覧取得する
+      description: タグ情報一覧取得する
+      parameters:
+        - name: limit
+          in: query
+          description: 取得数
+          required: false
+          type: integer
+        - name: status
+          in: query
+          description: 取得するタグの状態
+          required: false
+          type: string
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                name:
+                  type: string
+                  example: doggie
+  /public/user/login:
+    post:
+      tags:
+        - ユーザーログインAPI
+      summary:
+        - ユーザーログイン
+      description: ユーザーログインAPI、複数ログイン形式対応
+      parameters:
+        - name: identfier
+          in: formData
+          description: username | email | githubID 各タイプの対応値
+          required: true
+          type: string
+        - name: identityType
+          in: formData
+          description: ログインのタイプ github、SMScode、default、defaultはusername+password
+          required: true
+          type: string
+        - name: passWord
+          in: formData
+          description: descriptionがdefaultの場合のみ必要
+          required: false
+          format: password
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                example: >-
+                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJkZWZhdWx0TmFtZTc5NDMiLCJpY29uIjoiaHR0cHM6Ly9hdmF0YXJzLmdpdGh1YnVzZXJjb250ZW50LmNvbS91LzM1ODA2MDc_cz00MFx1MDAyNnY9NCIsImV4cCI6MTY2MDYwNzk5NiwibmJmIjoxNjYwNTIxNTk2LCJpYXQiOjE2NjA1MjE1OTZ9.aHYhfz1wT5WEO1HnIidfKx9V2uwHIn5CcodGsKmYpKI
+  /public/user/regist:
+    post:
+      tags:
+        - 新規ユーザーAPI
+      summary:
+        - 新規ユーザーAPI
+      description: テスト開発時に使用する、リリース後この形式の新規ユーザー廃棄する予定
+      parameters:
+        - name: identfier
+          in: formData
+          description: username
+          required: true
+          type: string
+        - name: passWord
+          in: formData
+          description: password
+          required: true
+          format: password
+      responses:
+        '204':
+          description: 成功時の場合、context存在しない
+          schema:
+            type: object
+  /private/user/me/recruitment:
+    get:
+      tags:
+        - ユーザーの募集情報
+      summary:
+        - ユーザーの募集情報を取得
+      description: 全てタイプのユーザーの募集情報を取得
+      parameters:
+        - name: X-Token
+          in: header
+          description: ユーザーのJWTToken User xxxxxx
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                title:
+                  type: string
+                  example: 募集タイトル
+                place:
+                  type: string
+                  example: 東京太田区xxx1-1-1
+                start:
+                  type: string
+                  example: '2022-09-15T08:59:56.383+09:00'
+                end:
+                  type: string
+                  example: '2022-09-15T09:59:56.383+09:00'
+                content:
+                  type: string
+                  example: 募集内容
+                paid:
+                  type: boolean
+                  example: true
+                reward:
+                  type: string
+                  example: コーラー一本
+                memberLimit:
+                  type: integer
+                  example: 2
+                type:
+                  type: string
+                  example: recruitment
+    post:
+      tags:
+        - ユーザーの募集情報
+      summary:
+        - ユーザーの募集情報追加
+      description: ユーザーの募集情報追加
+      parameters:
+        - name: title
+          in: formData
+          description: 募集タイトル
+          required: true
+          type: string
+        - name: place
+          in: formData
+          description: 場所
+          required: true
+          type: string
+        - name: start
+          in: formData
+          description: 開始時間
+          required: true
+          type: string
+        - name: end
+          in: formData
+          description: 終了時間
+          required: true
+          type: string
+        - name: content
+          in: formData
+          description: 募集内容
+          required: true
+          type: string
+        - name: paid
+          in: formData
+          description: 報酬あるかどうか
+          required: true
+          type: boolean
+        - name: reward
+          in: formData
+          description: 報酬内容
+          required: false
+          type: string
+        - name: memberLimit
+          in: formData
+          description: 応募人数上限
+          required: true
+          type: integer
+        - name: type
+          in: formData
+          description: 応募タイプ
+          required: true
+          type: string
+      responses:
+        '204':
+          description: 成功時レスポンスなし
+        '403':
+          description: tokenError
+    definitions:
+      '403':
+        description: tokenError
+components:
+  schemas:
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
