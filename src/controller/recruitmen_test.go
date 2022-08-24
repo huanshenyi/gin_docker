@@ -106,3 +106,39 @@ func Test_validateCreateInput(t *testing.T) {
 		})
 	}
 }
+
+func Test_validateJoinListInput(t *testing.T) {
+	tests := []struct {
+		name    string
+		params  osho.HTTPParams
+		want    recruitment.JoinListInput
+		wantErr error
+	}{
+		{
+			name: "ログインなしでは使えない",
+			params: osho.HTTPParams{
+				User: &user.UserData{ID: 0},
+			},
+			wantErr: &utils.UnauthorizedError{Action: "recruitment JoinList"},
+		},
+		{
+			name: "ログインすれば使える",
+			params: osho.HTTPParams{
+				User: &user.UserData{ID: 1},
+			},
+			wantErr: nil,
+			want:    recruitment.JoinListInput{UserID: 1, Limit: 10, Page: 1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := osho.GetGinContext(tt.params)
+			if err != nil {
+				t.Fatal(err)
+			}
+			b := Recruitment{}
+			got, err := b.validateJoinListInput(c)
+			osho.TestChecker(t, tt.want, tt.wantErr, got, err)
+		})
+	}
+}

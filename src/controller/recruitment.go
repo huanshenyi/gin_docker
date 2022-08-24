@@ -71,3 +71,36 @@ func (t *Recruitment) validateCreateInput(c *gin.Context) (input recruitment.Cre
 	err = Validate(input)
 	return
 }
+
+func (t *Recruitment) JoinList(c *gin.Context) {
+	input, err := t.validateJoinListInput(c)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	res, err := t.Interactor.JoinList(input)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+func (t *Recruitment) validateJoinListInput(c *gin.Context) (input recruitment.JoinListInput, err error) {
+	user, ok := authenticator.GetUser(c)
+	if !ok {
+		return recruitment.JoinListInput{}, &utils.UnauthorizedError{Action: "recruitment JoinList"}
+	}
+	ok = user.IsLoginedUser()
+	if !ok {
+		return recruitment.JoinListInput{}, &utils.UnauthorizedError{Action: "recruitment JoinList"}
+	}
+	input.UserID = user.ID
+	err = c.Bind(&input)
+	if err != nil {
+		err = &utils.InvalidParamError{Err: err}
+		return
+	}
+	err = Validate(input)
+	return
+}
