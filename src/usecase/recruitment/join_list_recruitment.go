@@ -1,8 +1,9 @@
 package recruitment
 
 import (
-	"gin_docker/src/domain"
 	"time"
+
+	"gin_docker/src/domain"
 )
 
 type JoinListInput struct {
@@ -45,7 +46,7 @@ type RecruitmentOwner struct {
 func (i *interactor) JoinList(input JoinListInput) (output JoinListOutput, err error) {
 	res, err := i.repository.JoinListRecruitment(i.tx, input.UserID, input.Page, input.Limit)
 	if err != nil {
-		return JoinListOutput{}, nil
+		return JoinListOutput{}, err
 	}
 	jList := make([]JoinListRecruitment, len(res.Recruitment))
 	for i, k := range res.Recruitment {

@@ -7,9 +7,9 @@ import (
 
 // Repository 募集テーブルに対する操作
 type Repository interface {
-	ListRecruitmentForUserID(tx domain.Tx, userID int) (Recruitments, error)
-	CreateRecruitment(tx domain.Tx, input domain.Recruitment) error                                 // 新規募集
-	JoinListRecruitment(tx domain.Tx, userID int, page int, limit int) (JoinListRecruitment, error) // 自分が応募した募集
+	ListRecruitmentForUserID(tx domain.Tx, userID int) (Recruitments, error)                        // 自分がオーナーの募集を表示
+	CreateRecruitment(tx domain.Tx, input domain.Recruitment) error                                 // 新規募集追加
+	JoinListRecruitment(tx domain.Tx, userID int, page int, limit int) (JoinListRecruitment, error) // 自分が応募した募集を返す
 }
 
 type Recruitments struct {

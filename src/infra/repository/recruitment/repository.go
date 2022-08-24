@@ -2,11 +2,12 @@ package recruitment
 
 import (
 	"fmt"
+	"time"
+
 	"gin_docker/src/domain"
 	"gin_docker/src/domain/recruitment"
 	"gin_docker/src/domain/user"
 	"gin_docker/src/infra/model"
-	"time"
 )
 
 type Repository struct {
@@ -75,7 +76,7 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 
 	var totalCount int64
 	if err := query.Count(&totalCount).Error; err != nil {
-		return recruitment.JoinListRecruitment{}, nil
+		return recruitment.JoinListRecruitment{}, err
 	}
 
 	if totalCount == 0 {
@@ -84,7 +85,7 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 
 	var rows []JoinListRecruitmentRow
 	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
-		return recruitment.JoinListRecruitment{}, nil
+		return recruitment.JoinListRecruitment{}, err
 	}
 	fmt.Println("rows:", rows)
 	jrs := make([]recruitment.JoinRecruitment, len(rows))
