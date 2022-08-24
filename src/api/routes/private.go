@@ -16,6 +16,11 @@ func CreatePrivateRoutes(engine *gin.RouterGroup, s *di.GssktService) {
 				recruitment.GET("", s.Recruitment.List)
 				recruitment.POST("", s.Recruitment.Create)
 			}
+
+			joinRecruitment := me.Group("/join-recruitments")
+			{
+				joinRecruitment.GET("", s.Recruitment.JoinList)
+			}
 		}
 	}
 }

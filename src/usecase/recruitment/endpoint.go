@@ -1,7 +1,6 @@
 package recruitment
 
 import (
-	"fmt"
 	"gin_docker/src/domain"
 	"gin_docker/src/domain/recruitment"
 )
@@ -9,6 +8,7 @@ import (
 type Interactor interface {
 	List(input ListInput) (ListOutput, error)
 	Create(input CreateInput) error
+	JoinList(input JoinListInput) (JoinListOutput, error)
 }
 
 func NewInteractor(repository recruitment.Repository, tx domain.Tx) Interactor {
@@ -24,7 +24,6 @@ type interactor struct {
 }
 
 func (i *interactor) List(input ListInput) (output ListOutput, err error) {
-	fmt.Println("ListInput", input)
 	res, err := i.repository.ListRecruitmentForUserID(i.tx, input.UserID)
 	if err != nil {
 		return ListOutput{}, err

@@ -15,17 +15,18 @@ func MigrateOnlyLocal(tx domain.Tx) {
 	}
 	log_source.Log.Info("start migration...")
 
-	hasTable := db.Migrator().HasTable("users")
+	hasTable := db.Migrator().HasTable("user_recruitments")
 	if hasTable {
 		return
 	}
 
 	tables := []interface{}{
-		&model.User{},
-		&model.UserAuth{},
-		&model.Tag{},
-		&model.AccessToken{},
-		&model.Recruitment{},
+		// &model.User{},
+		// &model.UserAuth{},
+		// &model.Tag{},
+		// &model.AccessToken{},
+		// &model.Recruitment{},
+		&model.UserRecruitment{},
 	}
 	if err := db.Migrator().CreateTable(tables...); err != nil {
 		log_source.Log.Error(err.Error())
