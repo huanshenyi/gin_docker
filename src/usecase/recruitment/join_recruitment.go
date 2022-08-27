@@ -21,5 +21,8 @@ func (i *interactor) Join(input JoinInpt) error {
 		return err
 	}
 	_, err = tx.Commit()
+	if err != nil {
+		return err
+	}
 	return nil
 }

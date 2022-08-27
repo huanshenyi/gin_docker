@@ -1,6 +1,7 @@
 package recruitment
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"time"
@@ -156,7 +157,7 @@ func (r Repository) JoinRecruitment(tx domain.Tx, userID int, recruitmentID int)
 	ur := model.UserRecruitment{UserID: userID, RecruitmentID: recruitmentID}
 	res := conn.Table(new(model.UserRecruitment).TableName()).Where("user_id = ? and recruitment_id = ?", userID, recruitmentID).First(&model.UserRecruitment{})
 	if res.Error != nil {
-		if res.Error == gorm.ErrRecordNotFound {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			if err := conn.Create(&ur).Error; err != nil {
 				return err
 			}
