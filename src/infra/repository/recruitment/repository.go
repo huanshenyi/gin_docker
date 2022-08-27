@@ -1,8 +1,12 @@
 package recruitment
 
 import (
+	"errors"
 	"fmt"
+	"math"
 	"time"
+
+	"gorm.io/gorm"
 
 	"gin_docker/src/domain"
 	"gin_docker/src/domain/recruitment"
@@ -87,7 +91,6 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
 		return recruitment.JoinListRecruitment{}, err
 	}
-	fmt.Println("rows:", rows)
 	jrs := make([]recruitment.JoinRecruitment, len(rows))
 	for k, i := range rows {
 		jrs[k] = i.ToDomain()
@@ -95,6 +98,7 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 
 	return recruitment.JoinListRecruitment{
 		Recruitment: jrs,
+		TotalPage:   int(math.Ceil(float64(totalCount) / float64(limit))),
 		TotalCount:  int(totalCount),
 	}, nil
 }
@@ -137,4 +141,30 @@ func (r JoinListRecruitmentRow) ToDomain() recruitment.JoinRecruitment {
 			Icon:     r.UserIcon,
 		},
 	}
+}
+
+func (r Repository) GetRecruitmentByID(tx domain.Tx, id int) (domain.Recruitment, error) {
+	conn := tx.ReadDB()
+	var row model.Recruitment
+	if err := conn.Debug().Where("id = ?", id).First(&row).Error; err != nil {
+		return domain.Recruitment{}, err
+	}
+	return row.ToDomain(), nil
+}
+
+func (r Repository) JoinRecruitment(tx domain.Tx, userID int, recruitmentID int) error {
+	conn := tx.DB()
+	ur := model.UserRecruitment{UserID: userID, RecruitmentID: recruitmentID}
+	res := conn.Table(new(model.UserRecruitment).TableName()).Where("user_id = ? and recruitment_id = ?", userID, recruitmentID).First(&model.UserRecruitment{})
+	if res.Error != nil {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			if err := conn.Create(&ur).Error; err != nil {
+				return err
+			}
+		} else {
+			return res.Error
+		}
+		return nil
+	}
+	return gorm.ErrInvalidValue
 }

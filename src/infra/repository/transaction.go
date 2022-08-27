@@ -28,7 +28,25 @@ func (t *Tx) Close() error {
 			return err
 		}
 	}
+	if t.rodb != nil {
+		rodb, _ := t.rodb.DB()
+		if err := rodb.Close(); err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+// ReadDB -
+func (t *Tx) ReadDB() *gorm.DB {
+	if t.isBegun {
+		return t.DB()
+	}
+
+	if t.rodb == nil {
+		t.rodb = infra.MustNewMySQLReadOnlyConnection()
+	}
+	return t.rodb
 }
 
 func (t *Tx) DB() *gorm.DB {

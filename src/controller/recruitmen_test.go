@@ -142,3 +142,42 @@ func Test_validateJoinListInput(t *testing.T) {
 		})
 	}
 }
+
+func Test_validateJoinInput(t *testing.T) {
+	tests := []struct {
+		name    string
+		params  osho.HTTPParams
+		want    recruitment.JoinInpt
+		wantErr error
+	}{
+		{
+			name: "ログインなしでは使えない",
+			params: osho.HTTPParams{
+				User: &user.UserData{ID: 0},
+			},
+			wantErr: &utils.UnauthorizedError{Action: "recruitment Join"},
+		},
+		{
+			name: "ログインすれば使える",
+			params: osho.HTTPParams{
+				User: &user.UserData{ID: 1},
+				Body: map[string]interface{}{
+					"recruitment_id": 10,
+				},
+			},
+			wantErr: nil,
+			want:    recruitment.JoinInpt{UserID: 1, RecruitmentID: 10},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := osho.GetGinContext(tt.params)
+			if err != nil {
+				t.Fatal(err)
+			}
+			b := Recruitment{}
+			got, err := b.validateJoinInput(c)
+			osho.TestChecker(t, tt.want, tt.wantErr, got, err)
+		})
+	}
+}
