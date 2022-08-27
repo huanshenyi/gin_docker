@@ -2,6 +2,7 @@ package recruitment
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"gin_docker/src/domain"
@@ -87,7 +88,6 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
 		return recruitment.JoinListRecruitment{}, err
 	}
-	fmt.Println("rows:", rows)
 	jrs := make([]recruitment.JoinRecruitment, len(rows))
 	for k, i := range rows {
 		jrs[k] = i.ToDomain()
@@ -95,6 +95,7 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 
 	return recruitment.JoinListRecruitment{
 		Recruitment: jrs,
+		TotalPage:   int(math.Ceil(float64(totalCount) / float64(limit))),
 		TotalCount:  int(totalCount),
 	}, nil
 }
@@ -137,4 +138,22 @@ func (r JoinListRecruitmentRow) ToDomain() recruitment.JoinRecruitment {
 			Icon:     r.UserIcon,
 		},
 	}
+}
+
+func (r Repository) GetRecruitmentByID(tx domain.Tx, id int) (domain.Recruitment, error) {
+	conn := tx.ReadDB()
+	var row model.Recruitment
+	if err := conn.Find(&row).Where("id = ?", id).Error; err != nil {
+		return domain.Recruitment{}, err
+	}
+	return row.ToDomain(), nil
+}
+
+func (r Repository) JoinRecruitment(tx domain.Tx, userID int, recruitmentID int) error {
+	conn := tx.DB()
+	ur := model.UserRecruitment{UserID: userID, RecruitmentID: recruitmentID}
+	if err := conn.Create(&ur).Error; err != nil {
+		return err
+	}
+	return nil
 }

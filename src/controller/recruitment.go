@@ -104,3 +104,38 @@ func (t *Recruitment) validateJoinListInput(c *gin.Context) (input recruitment.J
 	err = Validate(input)
 	return
 }
+
+// Join 募集に応募
+func (t *Recruitment) Join(c *gin.Context) {
+	input, err := t.validateJoinInput(c)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+
+	err = t.Interactor.Join(input)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	c.JSON(http.StatusNoContent, nil)
+}
+
+func (t *Recruitment) validateJoinInput(c *gin.Context) (input recruitment.JoinInpt, err error) {
+	user, ok := authenticator.GetUser(c)
+	if !ok {
+		return recruitment.JoinInpt{}, &utils.UnauthorizedError{Action: "recruitment Join"}
+	}
+	ok = user.IsLoginedUser()
+	if !ok {
+		return recruitment.JoinInpt{}, &utils.UnauthorizedError{Action: "recruitment Join"}
+	}
+	input.UserID = user.ID
+	err = c.BindJSON(&input)
+	if err != nil {
+		err = &utils.InvalidParamError{Err: err}
+		return
+	}
+	err = Validate(input)
+	return
+}

@@ -9,6 +9,7 @@ type Interactor interface {
 	List(input ListInput) (ListOutput, error)
 	Create(input CreateInput) error
 	JoinList(input JoinListInput) (JoinListOutput, error)
+	Join(input JoinInpt) error
 }
 
 func NewInteractor(repository recruitment.Repository, tx domain.Tx) Interactor {
