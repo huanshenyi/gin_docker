@@ -5,6 +5,8 @@ import (
 	"math"
 	"time"
 
+	"gorm.io/gorm"
+
 	"gin_docker/src/domain"
 	"gin_docker/src/domain/recruitment"
 	"gin_docker/src/domain/user"
@@ -143,7 +145,7 @@ func (r JoinListRecruitmentRow) ToDomain() recruitment.JoinRecruitment {
 func (r Repository) GetRecruitmentByID(tx domain.Tx, id int) (domain.Recruitment, error) {
 	conn := tx.ReadDB()
 	var row model.Recruitment
-	if err := conn.Find(&row).Where("id = ?", id).Error; err != nil {
+	if err := conn.Debug().Where("id = ?", id).First(&row).Error; err != nil {
 		return domain.Recruitment{}, err
 	}
 	return row.ToDomain(), nil
@@ -152,8 +154,16 @@ func (r Repository) GetRecruitmentByID(tx domain.Tx, id int) (domain.Recruitment
 func (r Repository) JoinRecruitment(tx domain.Tx, userID int, recruitmentID int) error {
 	conn := tx.DB()
 	ur := model.UserRecruitment{UserID: userID, RecruitmentID: recruitmentID}
-	if err := conn.Create(&ur).Error; err != nil {
-		return err
+	res := conn.Table(new(model.UserRecruitment).TableName()).Where("user_id = ? and recruitment_id = ?", userID, recruitmentID).First(&model.UserRecruitment{})
+	if res.Error != nil {
+		if res.Error == gorm.ErrRecordNotFound {
+			if err := conn.Create(&ur).Error; err != nil {
+				return err
+			}
+		} else {
+			return res.Error
+		}
+		return nil
 	}
-	return nil
+	return gorm.ErrInvalidValue
 }

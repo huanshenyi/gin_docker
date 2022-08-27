@@ -1,7 +1,5 @@
 package recruitment
 
-import "fmt"
-
 type JoinInpt struct {
 	UserID        int
 	RecruitmentID int `json:"recruitment_id" form:"recruitment_id" validate:"required"`
@@ -10,7 +8,7 @@ type JoinInpt struct {
 func (i *interactor) Join(input JoinInpt) error {
 	tx := i.tx.Begin()
 	// TODO: SkipDefaultTransactionをtrueにしないとチェンの呼び出しだできない
-	fmt.Println("SkipDefaultTransaction:", tx.DB().Config.SkipDefaultTransaction)
+	// fmt.Println("SkipDefaultTransaction:", tx.DB().Config.SkipDefaultTransaction)
 	defer tx.Rollback()
 
 	_, err := i.repository.GetRecruitmentByID(tx, input.RecruitmentID)
