@@ -6,7 +6,6 @@ import (
 	"time"
 
 	log "gin_docker/src/log_source"
-
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"
@@ -32,15 +31,15 @@ func (l *logger) LogMode(gormlogger.LogLevel) gormlogger.Interface {
 }
 
 func (l *logger) Info(ctx context.Context, s string, args ...interface{}) {
-	log.Log.WithContext(ctx).Infof(s, args)
+	log.Log.WithContext(ctx).Infof(s, args...)
 }
 
 func (l *logger) Warn(ctx context.Context, s string, args ...interface{}) {
-	log.Log.WithContext(ctx).Warnf(s, args)
+	log.Log.WithContext(ctx).Warnf(s, args...)
 }
 
 func (l *logger) Error(ctx context.Context, s string, args ...interface{}) {
-	log.Log.WithContext(ctx).Errorf(s, args)
+	log.Log.WithContext(ctx).Errorf(s, args...)
 }
 
 func (l *logger) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) {
