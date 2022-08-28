@@ -8,6 +8,8 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+
+	"gin_docker/src/utils"
 )
 
 func MustNewMySQLConnection() *gorm.DB {
@@ -31,7 +33,9 @@ func NewMySQLConnection() (db *gorm.DB, err error) {
 	val.Add("loc", "Asia/Tokyo")
 	dsn := fmt.Sprintf("%s?%s", conn, val.Encode())
 
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: utils.NewLogrus(),
+	})
 	if err != nil {
 		return
 	}
