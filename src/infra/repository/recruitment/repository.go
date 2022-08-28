@@ -12,6 +12,7 @@ import (
 	"gin_docker/src/domain/recruitment"
 	"gin_docker/src/domain/user"
 	"gin_docker/src/infra/model"
+	"gin_docker/src/utils"
 )
 
 type Repository struct {
@@ -146,7 +147,7 @@ func (r JoinListRecruitmentRow) ToDomain() recruitment.JoinRecruitment {
 func (r Repository) GetRecruitmentByID(tx domain.Tx, id int) (domain.Recruitment, error) {
 	conn := tx.ReadDB()
 	var row model.Recruitment
-	if err := conn.Debug().Where("id = ?", id).First(&row).Error; err != nil {
+	if err := conn.Where("id = ?", id).First(&row).Error; err != nil {
 		return domain.Recruitment{}, err
 	}
 	return row.ToDomain(), nil
@@ -166,5 +167,5 @@ func (r Repository) JoinRecruitment(tx domain.Tx, userID int, recruitmentID int)
 		}
 		return nil
 	}
-	return gorm.ErrInvalidValue
+	return &utils.InvalidParamError{Err: errors.New(fmt.Sprintf("Resource Existence recruitmentID:%d userID %d", recruitmentID, userID))}
 }

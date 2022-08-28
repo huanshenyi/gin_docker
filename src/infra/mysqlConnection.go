@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func MustNewMySQLConnection() *gorm.DB {
@@ -29,15 +30,16 @@ func NewMySQLConnection() (db *gorm.DB, err error) {
 	val.Add("parseTime", "True")
 	val.Add("loc", "Asia/Tokyo")
 	dsn := fmt.Sprintf("%s?%s", conn, val.Encode())
+
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return
 	}
 
 	if EnvMan.AppEnv == "development" {
-		db.Logger.LogMode(4) // Info
+		db.Logger.LogMode(logger.Info)
 	} else {
-		db.Logger.LogMode(1) // Silent
+		db.Logger.LogMode(logger.Error)
 	}
 
 	mysqlDB, _ := db.DB()
@@ -79,9 +81,9 @@ func NewMySQLReadOnlyConnection() (db *gorm.DB, err error) {
 	// db.Session(&gorm.Session{SkipDefaultTransaction: true})
 
 	if EnvMan.AppEnv == "development" {
-		db.Logger.LogMode(4) // Info
+		db.Logger.LogMode(logger.Info) // Info
 	} else {
-		db.Logger.LogMode(1) // Silent
+		db.Logger.LogMode(logger.Error) // Silent
 	}
 	// MaxOpenConns が 0 よりも大きく、新しい MaxIdleConns よりも小さい場合
 	// 新しい MaxIdleConns は MaxOpenConns の制限値に合わせて減少します。

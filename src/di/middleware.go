@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"gin_docker/src/domain/authenticator"
+	"gin_docker/src/log_source"
 	"gin_docker/src/middleware"
 )
 
@@ -18,7 +19,7 @@ func NewGinMiddlewares(srv *GssktService) *GinMiddlewares {
 	return &GinMiddlewares{
 		Chain: []gin.HandlerFunc{
 			gin.Recovery(),
-			gin.Logger(),
+			middleware.Logger(log_source.Log),
 			middleware.NewAuth(auth),
 			middleware.NewCors(),
 			middleware.NewDevice(),
