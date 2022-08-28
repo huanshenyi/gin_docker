@@ -15,10 +15,13 @@ func NewRepository() Repository {
 	return Repository{}
 }
 
-func (r Repository) List(tx domain.Tx, limit int, status int) ([]tag.TagData, error) {
+func (r Repository) List(tx domain.Tx, limit int, status int, keyWord string) ([]tag.TagData, error) {
 	conn := tx.DB()
 	var tags []model.Tag
 	query := conn.Table(fmt.Sprintf("%s", new(model.Tag).TableName()))
+	if keyWord != "" {
+		query.Where("name LIKE ?", "%"+keyWord+"%")
+	}
 	if status != 0 {
 		query.Where("status = ?", status)
 	}
