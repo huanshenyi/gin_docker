@@ -1,6 +1,7 @@
 package tag
 
 type ListInput struct {
-	Limit  int `form:"limit"`
-	Status int `form:"status"`
+	Keyword string `form:"keyword"`
+	Limit   int    `form:"limit,default=10"`
+	Status  int    `form:"status"`
 }

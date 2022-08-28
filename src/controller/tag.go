@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"gin_docker/src/usecase/tag"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"gin_docker/src/usecase/tag"
 )
 
 type Tag struct {
@@ -27,7 +28,7 @@ func (t *Tag) List(c *gin.Context) {
 
 func (t *Tag) validateListInput(c *gin.Context) (tag.ListInput, error) {
 	var input tag.ListInput
-	err := c.Bind(&input)
+	err := c.BindQuery(&input)
 	if err != nil {
 		return tag.ListInput{}, err
 	}

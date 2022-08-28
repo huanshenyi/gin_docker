@@ -22,7 +22,7 @@ type interactor struct {
 }
 
 func (i *interactor) List(input ListInput) ([]ListOutput, error) {
-	res, err := i.repository.List(i.tx, input.Limit, input.Status)
+	res, err := i.repository.List(i.tx, input.Limit, input.Status, input.Keyword)
 	if err != nil {
 		return nil, err
 	}
