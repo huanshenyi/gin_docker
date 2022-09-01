@@ -3,6 +3,7 @@ package recruitment
 import (
 	"gin_docker/src/domain"
 	"gin_docker/src/domain/recruitment"
+	"gin_docker/src/domain/tag"
 )
 
 type Interactor interface {
@@ -12,16 +13,18 @@ type Interactor interface {
 	Join(input JoinInpt) error
 }
 
-func NewInteractor(repository recruitment.Repository, tx domain.Tx) Interactor {
+func NewInteractor(repository recruitment.Repository, tagRepository tag.Repository, tx domain.Tx) Interactor {
 	return &interactor{
-		repository: repository,
-		tx:         tx,
+		repository:    repository,
+		tagRepository: tagRepository,
+		tx:            tx,
 	}
 }
 
 type interactor struct {
-	repository recruitment.Repository
-	tx         domain.Tx
+	repository    recruitment.Repository
+	tagRepository tag.Repository
+	tx            domain.Tx
 }
 
 func (i *interactor) List(input ListInput) (output ListOutput, err error) {

@@ -18,10 +18,18 @@ type CreateInput struct {
 	Reward      string                 `json:"reward" validate:"required"`
 	MemberLimit int                    `json:"memberLimit" validate:"required"`
 	Type        domain.RecruitmentType `json:"type" default:"recruitment"`
+	Tags        []int                  `json:"tags"`
 }
 
-func (i *interactor) Create(input CreateInput) error {
-	err := i.repository.CreateRecruitment(i.tx, domain.Recruitment{
+func (i *interactor) Create(input CreateInput) (err error) {
+	var tagIDs []int
+	if len(input.Tags) != 0 {
+		tagIDs, err = i.tagRepository.ListexistTags(i.tx, input.Tags)
+		if err != nil {
+			return err
+		}
+	}
+	err = i.repository.CreateRecruitment(i.tx, domain.Recruitment{
 		Title:       input.Title,
 		Place:       input.Place,
 		Start:       input.Start,
@@ -32,6 +40,7 @@ func (i *interactor) Create(input CreateInput) error {
 		MemberLimit: input.MemberLimit,
 		UserID:      input.UserID,
 		Type:        input.Type,
+		Tags:        tagIDs,
 	})
 	if err != nil {
 		return err

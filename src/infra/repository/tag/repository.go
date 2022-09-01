@@ -37,3 +37,16 @@ func (r Repository) List(tx domain.Tx, limit int, status int, keyWord string) ([
 	}
 	return tgList, nil
 }
+
+func (r Repository) ListexistTags(tx domain.Tx, tagIDs []int) ([]int, error) {
+	conn := tx.ReadDB()
+	var rows []model.Tag
+	if err := conn.Select("id").Where("id IN (?)", tagIDs).Find(&rows).Error; err != nil {
+		return nil, err
+	}
+	ids := make([]int, len(rows))
+	for k, i := range rows {
+		ids[k] = i.ID
+	}
+	return ids, nil
+}

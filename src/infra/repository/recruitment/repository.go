@@ -39,6 +39,13 @@ func (r Repository) ListRecruitmentForUserID(tx domain.Tx, userID int) (recruitm
 
 func (r Repository) CreateRecruitment(tx domain.Tx, input domain.Recruitment) error {
 	db := tx.DB()
+	var tags []model.Tag
+	if len(input.Tags) != 0 {
+		for _, i := range input.Tags {
+			tags = append(tags, model.Tag{ID: i})
+		}
+	}
+	fmt.Println(tags)
 	if err := db.Create(&model.Recruitment{
 		Title:       input.Title,
 		Place:       input.Place,
@@ -50,6 +57,7 @@ func (r Repository) CreateRecruitment(tx domain.Tx, input domain.Recruitment) er
 		MemberLimit: input.MemberLimit,
 		Type:        model.RecruitmentTypeToSQL(input.Type),
 		UserID:      input.UserID,
+		Tags:        tags,
 	}).Error; err != nil {
 		return err
 	}
