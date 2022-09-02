@@ -21,5 +21,5 @@ type Recruitment struct {
 	MemberLimit int
 	UserID      int
 	Type        RecruitmentType
-	Tags        []int
+	Tags        []TagData
 }

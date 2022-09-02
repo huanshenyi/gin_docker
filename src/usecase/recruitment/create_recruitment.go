@@ -22,7 +22,7 @@ type CreateInput struct {
 }
 
 func (i *interactor) Create(input CreateInput) (err error) {
-	var tagIDs []int
+	var tagIDs []domain.TagData
 	if len(input.Tags) != 0 {
 		tagIDs, err = i.tagRepository.ListexistTags(i.tx, input.Tags)
 		if err != nil {

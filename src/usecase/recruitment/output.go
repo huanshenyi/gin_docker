@@ -21,6 +21,12 @@ type Recruitment struct {
 	Reward      string                 `json:"reward"`
 	MemberLimit int                    `json:"memberLimit"`
 	Type        domain.RecruitmentType `json:"type"`
+	Tags        []Tag                  `json:"tags"`
+}
+
+type Tag struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func ConvertRecruitmentOutput(recruitments recruitment.Recruitments) (out ListOutput) {

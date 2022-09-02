@@ -42,10 +42,9 @@ func (r Repository) CreateRecruitment(tx domain.Tx, input domain.Recruitment) er
 	var tags []model.Tag
 	if len(input.Tags) != 0 {
 		for _, i := range input.Tags {
-			tags = append(tags, model.Tag{ID: i})
+			tags = append(tags, model.Tag{ID: i.ID})
 		}
 	}
-	fmt.Println(tags)
 	if err := db.Create(&model.Recruitment{
 		Title:       input.Title,
 		Place:       input.Place,

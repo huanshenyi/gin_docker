@@ -1,8 +1,9 @@
 package model
 
 import (
-	"gin_docker/src/domain/tag"
 	"time"
+
+	"gin_docker/src/domain"
 )
 
 type Tag struct {
@@ -17,8 +18,8 @@ func (m *Tag) TableName() string {
 	return "tags"
 }
 
-func (m *Tag) ToDomain() tag.TagData {
-	return tag.TagData{
+func (m *Tag) ToDomain() domain.TagData {
+	return domain.TagData{
 		ID:     m.ID,
 		Name:   m.Name,
 		Status: m.Status,
