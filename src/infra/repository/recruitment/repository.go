@@ -25,7 +25,7 @@ func NewRepository() Repository {
 func (r Repository) ListRecruitmentForUserID(tx domain.Tx, userID int) (recruitment.Recruitments, error) {
 	conn := tx.DB()
 	var rows []model.Recruitment
-	if err := conn.Where("user_id = ?", userID).Find(&rows).Error; err != nil {
+	if err := conn.Where("user_id = ?", userID).Preload("Tags").Find(&rows).Error; err != nil {
 		return recruitment.Recruitments{}, err
 	}
 	rs := make([]domain.Recruitment, len(rows))

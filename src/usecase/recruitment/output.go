@@ -33,6 +33,13 @@ func ConvertRecruitmentOutput(recruitments recruitment.Recruitments) (out ListOu
 	recruitmentList := make([]Recruitment, len(recruitments.Recruitments))
 
 	for i, r := range recruitments.Recruitments {
+		tags := make([]Tag, len(r.Tags))
+		for k, v := range r.Tags {
+			tags[k] = Tag{
+				ID:   v.ID,
+				Name: v.Name,
+			}
+		}
 		recruitmentList[i] = Recruitment{
 			ID:          r.ID,
 			Title:       r.Title,
@@ -44,6 +51,7 @@ func ConvertRecruitmentOutput(recruitments recruitment.Recruitments) (out ListOu
 			Reward:      r.Reward,
 			MemberLimit: r.MemberLimit,
 			Type:        r.Type,
+			Tags:        tags,
 		}
 	}
 	out = ListOutput{
