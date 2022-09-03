@@ -77,6 +77,7 @@ func Test_validateCreateInput(t *testing.T) {
 					"reward":      "100円",
 					"memberLimit": 2,
 					"type":        "recruitment",
+					"tags":        []int{1, 2},
 				},
 			},
 			want: recruitment.CreateInput{
@@ -90,6 +91,7 @@ func Test_validateCreateInput(t *testing.T) {
 				Reward:      "100円",
 				MemberLimit: 2,
 				Type:        domain.RecruitmentTypeDefault,
+				Tags:        []int{1, 2},
 			},
 			wantErr: nil,
 		},
