@@ -99,9 +99,15 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
 		return recruitment.JoinListRecruitment{}, err
 	}
+
 	jrs := make([]recruitment.JoinRecruitment, len(rows))
 	for k, i := range rows {
 		jrs[k] = i.ToDomain()
+	}
+
+	jrs, err := addTags(tx.ReadDB(), jrs)
+	if err != nil {
+		return recruitment.JoinListRecruitment{}, err
 	}
 
 	return recruitment.JoinListRecruitment{
@@ -128,8 +134,14 @@ type JoinListRecruitmentRow struct {
 	UserIcon               string    `gorm:"user_icon"`
 }
 
+type recruitmentTag struct {
+	ID            int    `gorm:"column:id"`
+	Name          string `gorm:"column:name"`
+	RecruitmentID int    `gorm:"column:recruitment_id"`
+}
+
 func (r JoinListRecruitmentRow) ToDomain() recruitment.JoinRecruitment {
-	return recruitment.JoinRecruitment{
+	jr := recruitment.JoinRecruitment{
 		Recruitment: domain.Recruitment{
 			ID:          r.RecruitmentID,
 			Title:       r.RecruitmentTitle,
@@ -149,6 +161,7 @@ func (r JoinListRecruitmentRow) ToDomain() recruitment.JoinRecruitment {
 			Icon:     r.UserIcon,
 		},
 	}
+	return jr
 }
 
 func (r Repository) GetRecruitmentByID(tx domain.Tx, id int) (domain.Recruitment, error) {
@@ -175,4 +188,38 @@ func (r Repository) JoinRecruitment(tx domain.Tx, userID int, recruitmentID int)
 		return nil
 	}
 	return &utils.InvalidParamError{Err: errors.New(fmt.Sprintf("Resource Existence recruitmentID:%d userID %d", recruitmentID, userID))}
+}
+
+func addTags(conn *gorm.DB, rows []recruitment.JoinRecruitment) (res []recruitment.JoinRecruitment, err error) {
+	recruitmentsIDs := extractIDs(rows)
+	var tagRows []recruitmentTag
+	if err = conn.Debug().Table(fmt.Sprintf("%s AS RT", new(model.RecruitmentTag).TableName())).
+		Select(`
+	T.id AS id,
+	T.name AS name,
+	RT.recruitment_id AS recruitment_id
+	`).Joins(fmt.Sprintf("INNER JOIN %s T ON T.id = RT.tag_id", new(model.Tag).TableName())).
+		Where("RT.recruitment_id IN (?)", recruitmentsIDs).Find(&tagRows).Error; err != nil {
+		return nil, err
+	}
+	tagMap := map[int][]domain.TagData{}
+	for _, tagRow := range tagRows {
+		tagMap[tagRow.RecruitmentID] = append(tagMap[tagRow.RecruitmentID], domain.TagData{
+			ID:   tagRow.ID,
+			Name: tagRow.Name,
+		})
+	}
+
+	for i, row := range rows {
+		rows[i].Recruitment.Tags = tagMap[row.Recruitment.ID]
+	}
+	return rows, err
+}
+
+func extractIDs(rows []recruitment.JoinRecruitment) []int {
+	var recruitmentsIDs = make([]int, len(rows))
+	for i, row := range rows {
+		recruitmentsIDs[i] = row.Recruitment.ID
+	}
+	return recruitmentsIDs
 }
