@@ -223,3 +223,16 @@ func extractIDs(rows []recruitment.JoinRecruitment) []int {
 	}
 	return recruitmentsIDs
 }
+
+// CheckMemberLimit 参加者満員になったかのチェック
+func (r Repository) CheckMemberLimit(tx domain.Tx, recruitmentID int, limit int) (bool, error) {
+	conn := tx.ReadDB()
+	var memberCount int64
+	if err := conn.Table(new(model.UserRecruitment).TableName()).
+		Where("recruitment_id = ?", recruitmentID).
+		Count(&memberCount).Error; err != nil {
+		return true, err
+	}
+
+	return memberCount >= int64(limit), nil
+}

@@ -12,6 +12,7 @@ type Repository interface {
 	JoinListRecruitment(tx domain.Tx, userID int, page int, limit int) (JoinListRecruitment, error) // 自分が応募した募集を返す
 	GetRecruitmentByID(tx domain.Tx, id int) (domain.Recruitment, error)                            // ID指定された募集返す
 	JoinRecruitment(tx domain.Tx, userID int, recruitmentID int) error                              // 募集参加
+	CheckMemberLimit(tx domain.Tx, recruitmentID int, limit int) (bool, error)                      // CheckMemberLimit 募集満員かどうかチェック
 }
 
 type Recruitments struct {
