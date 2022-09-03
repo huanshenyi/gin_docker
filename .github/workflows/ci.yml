@@ -1,36 +1,22 @@
-name: go-ci
-
+name: Run `go test`
 on:
   pull_request:
     types: [opened, synchronize]
-
 jobs:
-  # 共通処理
-  setup:
+  run-go-test:
     runs-on: ubuntu-latest
     steps:
-      - name: set up
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Find required go version
+        id: go-version
+        run: |
+          set -euxo pipefail
+          echo "::set-output name=version::$(grep '^go ' go.mod | awk '{print $2}')"
+      - name: Install Golang
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.18
-        id: go
-      - name: check out
-        uses: actions/checkout@v2
-
-      # 処理を高速化するために環境をキャッシュ
-      - name: Cache
-        uses: actions/cache@v2.1.0
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-  # testを通す
-  test:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: test
+          # Gets go version from the previous step
+          go-version: ${{ steps.go-version.outputs.version }}
+      - name: Run test suite
         run: go test ./src/... -v
