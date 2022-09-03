@@ -35,12 +35,18 @@ type RecruitmentInfo struct {
 	MemberLimit int                    `json:"member_limit"`
 	UserID      int                    `json:"user_id"`
 	Type        domain.RecruitmentType `json:"type"`
+	Tags        []RecruitmentTag       `json:"tags"`
 }
 
 type RecruitmentOwner struct {
 	ID       int    `json:"id"`
 	UserName string `json:"user_name"`
 	Icon     string `json:"icon"`
+}
+
+type RecruitmentTag struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func (i *interactor) JoinList(input JoinListInput) (output JoinListOutput, err error) {
@@ -50,6 +56,13 @@ func (i *interactor) JoinList(input JoinListInput) (output JoinListOutput, err e
 	}
 	jList := make([]JoinListRecruitment, len(res.Recruitment))
 	for i, k := range res.Recruitment {
+		tags := make([]RecruitmentTag, len(k.Recruitment.Tags))
+		for i, t := range k.Recruitment.Tags {
+			tags[i] = RecruitmentTag{
+				ID:   t.ID,
+				Name: t.Name,
+			}
+		}
 		jList[i] = JoinListRecruitment{
 			Recruitment: RecruitmentInfo{
 				ID:          k.Recruitment.ID,
@@ -63,6 +76,7 @@ func (i *interactor) JoinList(input JoinListInput) (output JoinListOutput, err e
 				MemberLimit: k.Recruitment.MemberLimit,
 				UserID:      k.Recruitment.UserID,
 				Type:        k.Recruitment.Type,
+				Tags:        tags,
 			},
 			Owner: RecruitmentOwner{
 				ID:       k.Owner.ID,

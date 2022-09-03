@@ -20,6 +20,7 @@ type Recruitment struct {
 	UserID      int       `gorm:"column:user_id"`     // オーナー
 	CreatedAt   time.Time `gorm:"column:created"`
 	UpdatedAt   time.Time `gorm:"column:modified"`
+	Tags        []Tag     `gorm:"many2many:recruitment_tags;"`
 }
 
 func (m *Recruitment) TableName() string {
@@ -27,6 +28,10 @@ func (m *Recruitment) TableName() string {
 }
 
 func (m *Recruitment) ToDomain() domain.Recruitment {
+	tags := make([]domain.TagData, len(m.Tags))
+	for k, i := range m.Tags {
+		tags[k] = i.ToDomain()
+	}
 	return domain.Recruitment{
 		ID:          m.ID,
 		Title:       m.Title,
@@ -39,6 +44,7 @@ func (m *Recruitment) ToDomain() domain.Recruitment {
 		MemberLimit: m.MemberLimit,
 		Type:        domain.RecruitmentType(m.Type),
 		UserID:      m.UserID,
+		Tags:        tags,
 	}
 }
 

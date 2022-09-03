@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"gin_docker/src/domain"
 	"gin_docker/src/infra"
 
@@ -12,7 +11,6 @@ import (
 // クロスドメイン解決用
 func NewCors() gin.HandlerFunc {
 	config := cors.DefaultConfig()
-	fmt.Println(infra.EnvMan.CORSAllowOrigins)
 	config.AllowOrigins = infra.EnvMan.CORSAllowOrigins
 	config.AllowMethods = []string{"GET", "PUT", "POST", "PATCH", "HEAD", "DELETE"}
 	config.AllowCredentials = true

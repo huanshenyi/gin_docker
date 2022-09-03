@@ -2,7 +2,6 @@ package log_source
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -14,8 +13,6 @@ type LogConfig struct {
 }
 
 func LoadLogConfig() *LogConfig {
-	str, _ := os.Getwd()
-	fmt.Println(str)
 	log_conf := LogConfig{}
 	file, err := os.Open("conf/log_conf.json")
 	if err != nil {

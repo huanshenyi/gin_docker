@@ -21,12 +21,25 @@ type Recruitment struct {
 	Reward      string                 `json:"reward"`
 	MemberLimit int                    `json:"memberLimit"`
 	Type        domain.RecruitmentType `json:"type"`
+	Tags        []Tag                  `json:"tags"`
+}
+
+type Tag struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func ConvertRecruitmentOutput(recruitments recruitment.Recruitments) (out ListOutput) {
 	recruitmentList := make([]Recruitment, len(recruitments.Recruitments))
 
 	for i, r := range recruitments.Recruitments {
+		tags := make([]Tag, len(r.Tags))
+		for k, v := range r.Tags {
+			tags[k] = Tag{
+				ID:   v.ID,
+				Name: v.Name,
+			}
+		}
 		recruitmentList[i] = Recruitment{
 			ID:          r.ID,
 			Title:       r.Title,
@@ -38,6 +51,7 @@ func ConvertRecruitmentOutput(recruitments recruitment.Recruitments) (out ListOu
 			Reward:      r.Reward,
 			MemberLimit: r.MemberLimit,
 			Type:        r.Type,
+			Tags:        tags,
 		}
 	}
 	out = ListOutput{
