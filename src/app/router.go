@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 	ver "github.com/hashicorp/go-version"
 )

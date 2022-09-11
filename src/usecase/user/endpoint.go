@@ -8,6 +8,7 @@ import (
 type Interactor interface {
 	Regist(input RegistInput) error
 	Login(input LoginInput) (UserToken, error)
+	GetMyInfo(input GetMyInfoInput) (GetMyInfoOutput, error)
 }
 
 func NewInteractor(repository user.Repository, tx domain.Tx) Interactor {

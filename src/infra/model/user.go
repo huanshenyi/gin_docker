@@ -10,6 +10,7 @@ type User struct {
 	UpdatedAt    time.Time     `gorm:"column:modified"` // modified
 	UserAuths    []UserAuth    `gorm:"foreignKey:UserID"`
 	Recruitments []Recruitment `gorm:"foreignKey:UserID"`
+	UserProfile  UserProfile
 }
 
 func (m *User) TableName() string {

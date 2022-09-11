@@ -2,12 +2,14 @@ package user
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
+
+	"gorm.io/gorm"
+
 	"gin_docker/src/domain"
 	"gin_docker/src/domain/user"
 	"gin_docker/src/infra/model"
-	"math/rand"
-
-	"gorm.io/gorm"
 )
 
 type Repository struct {
@@ -66,4 +68,58 @@ func (r Repository) AddUserToken(tx domain.Tx, token string, userID int) error {
 		}
 	}
 	return nil
+}
+
+func (r Repository) GetMyInfo(tx domain.Tx, userID int) (domain.UserProfile, error) {
+	var row userProfile
+	db := tx.DB()
+	query := db.Select(`
+	U.id AS id,
+	U.username AS username,
+	U.icon AS icon,
+	UP.email AS email,
+	UP.sex AS sex,
+	UP.living_area AS living_area,
+	UP.age AS age,
+	UP.appeal AS appeal,
+	UP.profession AS profession,
+	U.modified AS updated_at
+	`).
+		Table(fmt.Sprintf("%s as U", new(model.User).TableName())).
+		Joins(fmt.Sprintf("LEFT JOIN %s AS UP ON UP.user_id = U.id", new(model.UserProfile).TableName())).
+		Where("U.id = ?", userID)
+
+	if err := query.First(&row).Error; err != nil {
+		return domain.UserProfile{}, err
+	}
+
+	return row.toDomain(), nil
+}
+
+type userProfile struct {
+	ID         int       `gorm:"column:id"`
+	UserName   string    `gorm:"column:username"`
+	Icon       string    `gorm:"column:icon"`
+	Email      string    `gorm:"column:email"`
+	Sex        int       `gorm:"column:sex"`
+	LivingArea string    `gorm:"column:living_area"`
+	Age        int       `gorm:"column:age"`
+	Appeal     string    `gorm:"column:appeal"`
+	Profession string    `gorm:"column:profession"`
+	UpdatedAt  time.Time `gorm:"column:updated_at"`
+}
+
+func (u userProfile) toDomain() domain.UserProfile {
+	return domain.UserProfile{
+		UserID:     u.ID,
+		UserName:   u.UserName,
+		Icon:       u.Icon,
+		Email:      u.Email,
+		Sex:        domain.SexType(u.Sex),
+		LivingArea: u.LivingArea,
+		Age:        u.Age,
+		Appeal:     u.Appeal,
+		Profession: u.Profession,
+		UpdatedAt:  u.UpdatedAt,
+	}
 }
