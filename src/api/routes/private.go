@@ -26,6 +26,7 @@ func CreatePrivateRoutes(engine *gin.RouterGroup, s *di.GssktService) {
 			profile := me.Group("/profile")
 			{
 				profile.GET("", s.User.GetMyInfo)
+				profile.PUT("", s.User.UpdateMyInfo)
 			}
 		}
 	}

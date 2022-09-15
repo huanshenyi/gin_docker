@@ -40,7 +40,7 @@ type RecruitmentInfo struct {
 
 type RecruitmentOwner struct {
 	ID       int    `json:"id"`
-	UserName string `json:"user_name"`
+	UserName string `json:"userName"`
 	Icon     string `json:"icon"`
 }
 

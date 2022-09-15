@@ -97,3 +97,40 @@ func (u *User) validateGetMyInfoInput(c *gin.Context) (input user.GetMyInfoInput
 
 	return
 }
+
+func (u *User) UpdateMyInfo(c *gin.Context) {
+	input, err := u.validateUpdateMyInfoInput(c)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	err = u.Interactor.UpdateMyInfo(input)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	c.JSON(http.StatusNoContent, nil)
+}
+
+func (u *User) validateUpdateMyInfoInput(c *gin.Context) (input user.UpdateMyInfoInput, err error) {
+	userDate, ok := authenticator.GetUser(c)
+	if !ok {
+		return user.UpdateMyInfoInput{}, &utils.UnauthorizedError{Action: "update my info input"}
+	}
+	ok = userDate.IsLoginedUser()
+	if !ok {
+		return user.UpdateMyInfoInput{}, &utils.UnauthorizedError{Action: "update my info input"}
+	}
+	input.UserID = userDate.ID
+
+	err = c.BindJSON(&input)
+	if err != nil {
+		return user.UpdateMyInfoInput{}, &utils.InvalidParamError{Err: err}
+	}
+
+	err = Validate(input)
+	if err != nil {
+		return user.UpdateMyInfoInput{}, &utils.InvalidParamError{Err: err}
+	}
+	return
+}
