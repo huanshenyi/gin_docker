@@ -7,6 +7,7 @@ type Repository interface {
 	Login(tx domain.Tx, input LoginInput) (UserData, error)
 	AddUserToken(tx domain.Tx, token string, userID int) error
 	GetMyInfo(tx domain.Tx, userID int) (domain.UserProfile, error)
+	UpdateMyInfo(tx domain.Tx, userID domain.UserProfile) error
 }
 
 type RegistInput struct {

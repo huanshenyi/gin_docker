@@ -123,3 +123,28 @@ func (u userProfile) toDomain() domain.UserProfile {
 		UpdatedAt:  u.UpdatedAt,
 	}
 }
+
+// TODO: 今のクエリいつか修正したい
+func (r Repository) UpdateMyInfo(tx domain.Tx, user domain.UserProfile) error {
+	db := tx.DB()
+
+	if err := db.Model(model.User{}).Where("id", user.UserID).Updates(model.User{
+		UserName: user.UserName,
+		Icon:     user.Icon,
+	}).Error; err != nil {
+		return err
+	}
+
+	if err := db.Where("user_id", user.UserID).Updates(model.UserProfile{
+		Email:      user.Email,
+		Sex:        int(user.Sex),
+		LivingArea: user.LivingArea,
+		Age:        user.Age,
+		Appeal:     user.Appeal,
+		Profession: user.Profession,
+	}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
