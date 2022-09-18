@@ -12,7 +12,7 @@ type GetMyInfoInput struct {
 
 type GetMyInfoOutput struct {
 	ID         int       `json:"id"`
-	UserName   string    `json:"userName"`
+	UserName   string    `json:"username"`
 	Icon       string    `json:"icon"`
 	Email      string    `json:"email"`
 	Sex        string    `json:"sex"`

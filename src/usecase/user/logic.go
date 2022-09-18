@@ -11,7 +11,7 @@ import (
 var mysecret = "mysecret"
 
 type MyClaims struct {
-	UserName string `json:"user_name"`
+	UserName string `json:"username"`
 	Icon     string `json:"icon"`
 	jwt.RegisteredClaims
 }
