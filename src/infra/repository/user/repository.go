@@ -44,6 +44,7 @@ func (r Repository) Login(tx domain.Tx, input user.LoginInput) (user.UserData, e
 		ID:       userData.ID,
 		UserName: userData.UserName,
 		Icon:     userData.Icon,
+		Group:    domain.UserGroup(userData.Group),
 	}, nil
 }
 

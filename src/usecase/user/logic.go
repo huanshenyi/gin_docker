@@ -13,6 +13,7 @@ var mysecret = "mysecret"
 type MyClaims struct {
 	UserName string `json:"username"`
 	Icon     string `json:"icon"`
+	Group    string `json:"group"`
 	jwt.RegisteredClaims
 }
 
@@ -29,6 +30,7 @@ func makeToken(user user.UserData) (string, error) {
 	claim := MyClaims{
 		UserName: user.UserName,
 		Icon:     user.Icon,
+		Group:    user.Group.String(),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour * time.Duration(1))),
 			IssuedAt:  jwt.NewNumericDate(time.Now()), //発行時間

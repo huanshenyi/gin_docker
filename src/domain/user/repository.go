@@ -25,6 +25,7 @@ type UserData struct {
 	ID       int
 	UserName string
 	Icon     string
+	Group    domain.UserGroup
 }
 
 func (u UserData) IsLoginedUser() bool {
