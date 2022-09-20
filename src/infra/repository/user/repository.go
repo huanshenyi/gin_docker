@@ -75,16 +75,13 @@ func (r Repository) GetMyInfo(tx domain.Tx, userID int) (domain.UserProfile, err
 	var row userProfile
 	db := tx.DB()
 	query := db.Select(`
-	U.id AS id,
-	U.username AS username,
-	U.icon AS icon,
+	U.*,
 	UP.email AS email,
 	UP.sex AS sex,
 	UP.living_area AS living_area,
 	UP.age AS age,
 	UP.appeal AS appeal,
-	UP.profession AS profession,
-	U.modified AS updated_at
+	UP.profession AS profession
 	`).
 		Table(fmt.Sprintf("%s as U", new(model.User).TableName())).
 		Joins(fmt.Sprintf("LEFT JOIN %s AS UP ON UP.user_id = U.id", new(model.UserProfile).TableName())).
@@ -107,6 +104,7 @@ type userProfile struct {
 	Age        int       `gorm:"column:age"`
 	Appeal     string    `gorm:"column:appeal"`
 	Profession string    `gorm:"column:profession"`
+	Group      int       `gorm:"column:group"`
 	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
@@ -121,6 +119,7 @@ func (u userProfile) toDomain() domain.UserProfile {
 		Age:        u.Age,
 		Appeal:     u.Appeal,
 		Profession: u.Profession,
+		Group:      domain.UserGroup(u.Group),
 		UpdatedAt:  u.UpdatedAt,
 	}
 }

@@ -20,6 +20,7 @@ type GetMyInfoOutput struct {
 	Age        int       `json:"age"`
 	Appeal     string    `json:"appeal"`
 	Profession string    `json:"profession"`
+	Group      string    `json:"group"`
 	UpdatedAt  time.Time `json:"updatedAt"`
 }
 
@@ -42,6 +43,7 @@ func convertProfileOutput(input domain.UserProfile) GetMyInfoOutput {
 		Age:        input.Age,
 		Appeal:     input.Appeal,
 		Profession: input.Profession,
+		Group:      input.Group.String(),
 		UpdatedAt:  input.UpdatedAt,
 	}
 }
