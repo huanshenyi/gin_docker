@@ -47,6 +47,26 @@ func (s SexType) String() string {
 	return "undefined"
 }
 
+type UserGroup int
+
+const (
+	GroupUnknown UserGroup = iota
+	GroupAdmin
+	GroupUser
+)
+
+func (s UserGroup) String() string {
+	switch s {
+	case GroupUnknown:
+		return "unknown"
+	case GroupAdmin:
+		return "admin"
+	case GroupUser:
+		return "user"
+	}
+	return "unknown"
+}
+
 type UserProfile struct {
 	UserID     int
 	UserName   string
@@ -57,5 +77,6 @@ type UserProfile struct {
 	Age        int
 	Appeal     string
 	Profession string
+	Group      UserGroup
 	UpdatedAt  time.Time
 }
