@@ -14,4 +14,5 @@ func CreatePublicRoutes(engine *gin.RouterGroup, s *di.GssktService) {
 		user.POST("/regist", s.User.Regist)
 		user.POST("/login", s.User.Login)
 	}
+	engine.GET("/recruitment", s.Recruitment.PublicList)
 }
