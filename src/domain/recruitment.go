@@ -9,6 +9,26 @@ const (
 	RecruitmentTypeFreeTime RecruitmentType = "freeTime"
 )
 
+func (r RecruitmentType) String() string {
+	switch r {
+	case RecruitmentTypeDefault:
+		return "recruitment"
+	case RecruitmentTypeFreeTime:
+		return "freeTime"
+	}
+	return "recruitment"
+}
+
+func ToRecruitmentType(t string) RecruitmentType {
+	switch t {
+	case "recruitment":
+		return RecruitmentTypeDefault
+	case "freeTime":
+		return RecruitmentTypeFreeTime
+	}
+	return RecruitmentTypeDefault
+}
+
 type Recruitment struct {
 	ID          int
 	Title       string
