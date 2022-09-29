@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"net/http"
 	"testing"
 	"time"
 
@@ -179,6 +180,38 @@ func Test_validateJoinInput(t *testing.T) {
 			}
 			b := Recruitment{}
 			got, err := b.validateJoinInput(c)
+			osho.TestChecker(t, tt.want, tt.wantErr, got, err)
+		})
+	}
+}
+
+func Test_validatePublicList(t *testing.T) {
+	tests := []struct {
+		name    string
+		params  osho.HTTPParams
+		want    recruitment.PublicListInput
+		wantErr error
+	}{
+		{
+			name: "typeはfreetimeとrecruitment",
+			params: osho.HTTPParams{
+				Query:  "type=freetime",
+				URL:    "/public/recruitment",
+				Method: http.MethodGet,
+			},
+			wantErr: nil,
+			want:    recruitment.PublicListInput{Page: 1, Limit: 10, Type: "freetime", Tag: ""},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := osho.GetGinContext(tt.params)
+			if err != nil {
+				t.Fatal(err)
+			}
+			b := Recruitment{}
+			got, err := b.validatePublicList(c)
 			osho.TestChecker(t, tt.want, tt.wantErr, got, err)
 		})
 	}

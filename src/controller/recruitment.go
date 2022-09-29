@@ -139,3 +139,29 @@ func (t *Recruitment) validateJoinInput(c *gin.Context) (input recruitment.JoinI
 	err = Validate(input)
 	return
 }
+
+// PublicList - 公開募集リスト取得
+func (t *Recruitment) PublicList(c *gin.Context) {
+	input, err := t.validatePublicList(c)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	res, err := t.Interactor.PublicList(input)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+func (t *Recruitment) validatePublicList(c *gin.Context) (input recruitment.PublicListInput, err error) {
+	err = c.BindQuery(&input)
+	if err != nil {
+		err = &utils.InvalidParamError{Err: err}
+		return
+	}
+	err = Validate(input)
+
+	return
+}

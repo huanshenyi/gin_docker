@@ -100,7 +100,7 @@ func (r Repository) JoinListRecruitment(tx domain.Tx, userID int, page int, limi
 		return recruitment.JoinListRecruitment{}, err
 	}
 
-	jrs := make([]recruitment.JoinRecruitment, len(rows))
+	jrs := make([]recruitment.Recruitment, len(rows))
 	for k, i := range rows {
 		jrs[k] = i.ToDomain()
 	}
@@ -140,8 +140,8 @@ type recruitmentTag struct {
 	RecruitmentID int    `gorm:"column:recruitment_id"`
 }
 
-func (r JoinListRecruitmentRow) ToDomain() recruitment.JoinRecruitment {
-	jr := recruitment.JoinRecruitment{
+func (r JoinListRecruitmentRow) ToDomain() recruitment.Recruitment {
+	jr := recruitment.Recruitment{
 		Recruitment: domain.Recruitment{
 			ID:          r.RecruitmentID,
 			Title:       r.RecruitmentTitle,
@@ -190,7 +190,7 @@ func (r Repository) JoinRecruitment(tx domain.Tx, userID int, recruitmentID int)
 	return &utils.InvalidParamError{Err: errors.New(fmt.Sprintf("Resource Existence recruitmentID:%d userID %d", recruitmentID, userID))}
 }
 
-func addTags(conn *gorm.DB, rows []recruitment.JoinRecruitment) (res []recruitment.JoinRecruitment, err error) {
+func addTags(conn *gorm.DB, rows []recruitment.Recruitment) (res []recruitment.Recruitment, err error) {
 	recruitmentsIDs := extractIDs(rows)
 	var tagRows []recruitmentTag
 	if err = conn.Debug().Table(fmt.Sprintf("%s AS RT", new(model.RecruitmentTag).TableName())).
@@ -216,7 +216,7 @@ func addTags(conn *gorm.DB, rows []recruitment.JoinRecruitment) (res []recruitme
 	return rows, err
 }
 
-func extractIDs(rows []recruitment.JoinRecruitment) []int {
+func extractIDs(rows []recruitment.Recruitment) []int {
 	var recruitmentsIDs = make([]int, len(rows))
 	for i, row := range rows {
 		recruitmentsIDs[i] = row.Recruitment.ID
@@ -235,4 +235,62 @@ func (r Repository) CheckMemberLimit(tx domain.Tx, recruitmentID int, limit int)
 	}
 
 	return memberCount >= int64(limit), nil
+}
+
+func (r Repository) PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag string, page int, limit int) (recruitment.PublicListRecruitment, error) {
+	db := tx.DB()
+	query := db.
+		Select(`
+	  DISTINCT(R.id) AS recruitment_id,
+	  R.title AS recruitment_title,
+	  R.place AS recruitment_place,
+	  R.start AS recruitment_start,
+      R.end AS recruitment_end,
+	  R.content AS recruitment_content,
+	  R.paid AS recruitment_paid,
+	  R.reward AS recruitment_reward,
+	  R.memberLimit AS recruitment_member_limit,
+	  R.user_id AS recruitment_user_id,
+	  R.type AS recruitment_type,
+	  U.id AS user_id,
+	  U.username AS user_name,
+	  U.Icon AS user_icon
+	`).Table(fmt.Sprintf("%s as R", new(model.Recruitment).TableName())).
+		Joins(fmt.Sprintf("LEFT JOIN %s AS RT ON R.id = RT.recruitment_id", new(model.RecruitmentTag).TableName())).
+		Joins(fmt.Sprintf("LEFT JOIN %s AS T ON RT.tag_id = T.id", new(model.Tag).TableName())).
+		Joins(fmt.Sprintf("LEFT JOIN %s AS UR ON R.id = UR.recruitment_id", new(model.UserRecruitment).TableName())).
+		Joins(fmt.Sprintf("LEFT JOIN %s AS U ON R.user_id = U.id", new(model.User).TableName())).
+		Where("R.type = ?", rtype.String())
+
+	if tag != "" {
+		query = query.Where("T.name = ?", tag)
+	}
+
+	var rows []JoinListRecruitmentRow
+	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
+		return recruitment.PublicListRecruitment{}, err
+	}
+
+	var totalCount int
+	totalCount = len(rows)
+
+	if totalCount == 0 {
+		return recruitment.PublicListRecruitment{}, nil
+	}
+
+	jrs := make([]recruitment.Recruitment, len(rows))
+	for k, i := range rows {
+		jrs[k] = i.ToDomain()
+	}
+
+	jrs, err := addTags(tx.ReadDB(), jrs)
+	if err != nil {
+		return recruitment.PublicListRecruitment{}, err
+	}
+
+	return recruitment.PublicListRecruitment{
+		Recruitment: jrs,
+		TotalPage:   int(math.Ceil(float64(totalCount) / float64(limit))),
+		TotalCount:  int(totalCount),
+	}, nil
 }
