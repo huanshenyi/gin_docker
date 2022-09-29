@@ -241,7 +241,7 @@ func (r Repository) PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag s
 	db := tx.DB()
 	query := db.
 		Select(`
-	  R.id AS recruitment_id,
+	  DISTINCT(R.id) AS recruitment_id,
 	  R.title AS recruitment_title,
 	  R.place AS recruitment_place,
 	  R.start AS recruitment_start,
@@ -256,22 +256,26 @@ func (r Repository) PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag s
 	  U.username AS user_name,
 	  U.Icon AS user_icon
 	`).Table(fmt.Sprintf("%s as R", new(model.Recruitment).TableName())).
+		Joins(fmt.Sprintf("LEFT JOIN %s AS RT ON R.id = RT.recruitment_id", new(model.RecruitmentTag).TableName())).
+		Joins(fmt.Sprintf("LEFT JOIN %s AS T ON RT.tag_id = T.id", new(model.Tag).TableName())).
 		Joins(fmt.Sprintf("LEFT JOIN %s AS UR ON R.id = UR.recruitment_id", new(model.UserRecruitment).TableName())).
 		Joins(fmt.Sprintf("LEFT JOIN %s AS U ON R.user_id = U.id", new(model.User).TableName())).
 		Where("R.type = ?", rtype.String())
 
-	var totalCount int64
-	if err := query.Count(&totalCount).Error; err != nil {
-		return recruitment.PublicListRecruitment{}, err
-	}
-
-	if totalCount == 0 {
-		return recruitment.PublicListRecruitment{}, nil
+	if tag != "" {
+		query = query.Where("T.name = ?", tag)
 	}
 
 	var rows []JoinListRecruitmentRow
 	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
 		return recruitment.PublicListRecruitment{}, err
+	}
+
+	var totalCount int
+	totalCount = len(rows)
+
+	if totalCount == 0 {
+		return recruitment.PublicListRecruitment{}, nil
 	}
 
 	jrs := make([]recruitment.Recruitment, len(rows))
