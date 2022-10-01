@@ -129,6 +129,7 @@ type JoinListRecruitmentRow struct {
 	RecruitmentMemberLimit int       `gorm:"recruitment_member_limit"`
 	RecruitmentUserID      int       `gorm:"recruitment_user_id"`
 	RecruitmentType        string    `gorm:"recruitment_type"`
+	RecruitmentCreated     time.Time `gorm:"recruitment_created"`
 	UserID                 int       `gorm:"user_id"`
 	UserName               string    `gorm:"user_name"`
 	UserIcon               string    `gorm:"user_icon"`
@@ -153,6 +154,7 @@ func (r JoinListRecruitmentRow) ToDomain() recruitment.Recruitment {
 			Reward:      r.RecruitmentReward,
 			MemberLimit: r.RecruitmentMemberLimit,
 			UserID:      r.RecruitmentUserID,
+			Created:     r.RecruitmentCreated,
 			Type:        domain.RecruitmentType(r.RecruitmentType),
 		},
 		Owner: user.UserData{
@@ -252,6 +254,7 @@ func (r Repository) PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag s
 	  R.memberLimit AS recruitment_member_limit,
 	  R.user_id AS recruitment_user_id,
 	  R.type AS recruitment_type,
+	  R.created AS recruitment_created,
 	  U.id AS user_id,
 	  U.username AS user_name,
 	  U.Icon AS user_icon

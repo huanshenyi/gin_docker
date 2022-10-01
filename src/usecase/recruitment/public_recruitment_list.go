@@ -42,6 +42,7 @@ func (i *interactor) PublicList(input PublicListInput) (output PublicListOutput,
 				MemberLimit: k.Recruitment.MemberLimit,
 				UserID:      k.Recruitment.UserID,
 				Type:        k.Recruitment.Type,
+				Created:     k.Recruitment.Created,
 				Tags:        tags,
 			},
 			Owner: RecruitmentOwner{

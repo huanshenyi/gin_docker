@@ -32,9 +32,10 @@ type RecruitmentInfo struct {
 	Content     string                 `json:"content"`
 	Paid        bool                   `json:"paid"`
 	Reward      string                 `json:"reward"`
-	MemberLimit int                    `json:"member_limit"`
-	UserID      int                    `json:"user_id"`
+	MemberLimit int                    `json:"memberLimit"`
+	UserID      int                    `json:"userID"`
 	Type        domain.RecruitmentType `json:"type"`
+	Created     time.Time              `json:"created"`
 	Tags        []RecruitmentTag       `json:"tags"`
 }
 

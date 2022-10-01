@@ -41,5 +41,6 @@ type Recruitment struct {
 	MemberLimit int
 	UserID      int
 	Type        RecruitmentType
+	Created     time.Time
 	Tags        []TagData
 }
