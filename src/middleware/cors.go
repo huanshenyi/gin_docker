@@ -14,7 +14,7 @@ func NewCors() gin.HandlerFunc {
 	config.AllowOrigins = infra.EnvMan.CORSAllowOrigins
 	config.AllowMethods = []string{"GET", "PUT", "POST", "PATCH", "HEAD", "DELETE"}
 	config.AllowCredentials = true
-	config.AllowHeaders = []string{domain.ClientAccessUserTokenHTTPHeaderKey}
+	config.AllowHeaders = []string{domain.ClientAccessUserTokenHTTPHeaderKey, domain.ClientAppTypeHTTPHeaderKey, "Content-Type"}
 	return cors.New(
 		config,
 	)
