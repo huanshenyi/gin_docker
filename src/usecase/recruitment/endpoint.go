@@ -12,6 +12,7 @@ type Interactor interface {
 	JoinList(input JoinListInput) (JoinListOutput, error)
 	Join(input JoinInpt) error
 	PublicList(input PublicListInput) (PublicListOutput, error)
+	Delete(input DeleteInput) error
 }
 
 func NewInteractor(repository recruitment.Repository, tagRepository tag.Repository, tx domain.Tx) Interactor {

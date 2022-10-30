@@ -10,6 +10,8 @@ import (
 	"gin_docker/src/osho"
 	"gin_docker/src/usecase/recruitment"
 	"gin_docker/src/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Test_validateList(t *testing.T) {
@@ -212,6 +214,45 @@ func Test_validatePublicList(t *testing.T) {
 			}
 			b := Recruitment{}
 			got, err := b.validatePublicList(c)
+			osho.TestChecker(t, tt.want, tt.wantErr, got, err)
+		})
+	}
+}
+
+func Test_validateDelete(t *testing.T) {
+	tests := []struct {
+		name    string
+		params  osho.HTTPParams
+		want    recruitment.DeleteInput
+		wantErr error
+	}{
+		{
+			name: "ログインなしでは使えない",
+			params: osho.HTTPParams{
+				User: &user.UserData{ID: 0},
+			},
+			wantErr: &utils.UnauthorizedError{Action: "recruitment delete"},
+		},
+		{
+			name: "ログインすれば使える",
+			params: osho.HTTPParams{
+				User:   &user.UserData{ID: 1},
+				URL:    "/private/user/me/recruitments/14",
+				Params: gin.Params{gin.Param{Key: "recruitmentID", Value: "14"}},
+			},
+			wantErr: nil,
+			want:    recruitment.DeleteInput{UserID: 1, RecruitmentID: 14},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := osho.GetGinContext(tt.params)
+			if err != nil {
+				t.Fatal(err)
+			}
+			b := Recruitment{}
+			got, err := b.validateDeleteInput(c)
 			osho.TestChecker(t, tt.want, tt.wantErr, got, err)
 		})
 	}

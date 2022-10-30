@@ -165,3 +165,36 @@ func (t *Recruitment) validatePublicList(c *gin.Context) (input recruitment.Publ
 
 	return
 }
+
+func (t *Recruitment) Delete(c *gin.Context) {
+	input, err := t.validateDeleteInput(c)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	err = t.Interactor.Delete(input)
+	if err != nil {
+		ErrorResponse(c, err)
+		return
+	}
+	c.JSON(http.StatusNoContent, nil)
+}
+
+func (t *Recruitment) validateDeleteInput(c *gin.Context) (input recruitment.DeleteInput, err error) {
+	user, ok := authenticator.GetUser(c)
+	if !ok {
+		return recruitment.DeleteInput{}, &utils.UnauthorizedError{Action: "recruitment delete"}
+	}
+	ok = user.IsLoginedUser()
+	if !ok {
+		return recruitment.DeleteInput{}, &utils.UnauthorizedError{Action: "recruitment delete"}
+	}
+	input.UserID = user.ID
+
+	err = c.BindUri(&input)
+	if err != nil {
+		err = &utils.InvalidParamError{Err: err}
+		return
+	}
+	return
+}

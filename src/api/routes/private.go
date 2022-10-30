@@ -15,6 +15,7 @@ func CreatePrivateRoutes(engine *gin.RouterGroup, s *di.GssktService) {
 			{
 				recruitment.GET("", s.Recruitment.List)
 				recruitment.POST("", s.Recruitment.Create)
+				recruitment.DELETE("/:recruitmentID", s.Recruitment.Delete)
 			}
 
 			joinRecruitment := me.Group("/join-recruitments")

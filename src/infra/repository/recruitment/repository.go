@@ -297,3 +297,15 @@ func (r Repository) PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag s
 		TotalCount:  int(totalCount),
 	}, nil
 }
+
+func (r Repository) DeleteRecruitment(tx domain.Tx, recruitmentID int) error {
+	conn := tx.DB()
+	if err := conn.Delete(&model.Recruitment{}, recruitmentID).Error; err != nil {
+		return err
+	}
+	if err := conn.Where("recruitment_id = ?", recruitmentID).Delete(&model.RecruitmentTag{}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
