@@ -20,7 +20,7 @@ type Recruitment struct {
 	UserID      int       `gorm:"column:user_id"`     // オーナー
 	CreatedAt   time.Time `gorm:"column:created"`
 	UpdatedAt   time.Time `gorm:"column:modified"`
-	Tags        []Tag     `gorm:"many2many:recruitment_tags;"`
+	Tags        []Tag     `gorm:"many2many:recruitment_tags;constraint:OnDelete:CASCADE"`
 }
 
 func (m *Recruitment) TableName() string {

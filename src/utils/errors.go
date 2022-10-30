@@ -30,7 +30,7 @@ type ResourceNotFoundError struct {
 }
 
 func (e *ResourceNotFoundError) Error() string {
-	return fmt.Sprintf("%s not found", e.Error())
+	return fmt.Sprintf("%s not found", e.Resource)
 }
 
 // ResourceNotPublicError
@@ -39,7 +39,7 @@ type ResourceNotPublicError struct {
 }
 
 func (e *ResourceNotPublicError) Error() string {
-	return fmt.Sprintf("%s is not public", e.Error())
+	return fmt.Sprintf("%s is not public", e.Resource)
 }
 
 // NotImplementedYetError

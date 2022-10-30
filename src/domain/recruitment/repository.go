@@ -14,6 +14,7 @@ type Repository interface {
 	JoinRecruitment(tx domain.Tx, userID int, recruitmentID int) error                                                     // 募集参加
 	CheckMemberLimit(tx domain.Tx, recruitmentID int, limit int) (bool, error)                                             // CheckMemberLimit 募集満員かどうかチェック
 	PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag string, page int, limit int) (PublicListRecruitment, error) // 全ての募集一覧
+	DeleteRecruitment(tx domain.Tx, recruitmentID int) error
 }
 
 type Recruitments struct {
