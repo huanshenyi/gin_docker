@@ -263,7 +263,8 @@ func (r Repository) PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag s
 		Joins(fmt.Sprintf("LEFT JOIN %s AS T ON RT.tag_id = T.id", new(model.Tag).TableName())).
 		Joins(fmt.Sprintf("LEFT JOIN %s AS UR ON R.id = UR.recruitment_id", new(model.UserRecruitment).TableName())).
 		Joins(fmt.Sprintf("LEFT JOIN %s AS U ON R.user_id = U.id", new(model.User).TableName())).
-		Where("R.type = ?", rtype.String())
+		Where("R.type = ?", rtype.String()).
+		Order("R.id DESC")
 
 	if tag != "" {
 		query = query.Where("T.name = ?", tag)
