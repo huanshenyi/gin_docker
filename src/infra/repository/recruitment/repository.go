@@ -270,16 +270,18 @@ func (r Repository) PublicList(tx domain.Tx, rtype domain.RecruitmentType, tag s
 		query = query.Where("T.name = ?", tag)
 	}
 
-	var rows []JoinListRecruitmentRow
-	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
+	var totalCount int64
+	if err := query.Count(&totalCount).Error; err != nil {
 		return recruitment.PublicListRecruitment{}, err
 	}
 
-	var totalCount int
-	totalCount = len(rows)
-
 	if totalCount == 0 {
 		return recruitment.PublicListRecruitment{}, nil
+	}
+
+	var rows []JoinListRecruitmentRow
+	if err := query.Limit(limit).Offset((page - 1) * limit).Find(&rows).Error; err != nil {
+		return recruitment.PublicListRecruitment{}, err
 	}
 
 	jrs := make([]recruitment.Recruitment, len(rows))
